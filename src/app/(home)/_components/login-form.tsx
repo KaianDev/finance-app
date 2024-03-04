@@ -4,18 +4,15 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-// Utilities
-import { frontendApi } from "@/lib/api";
-
 // Components
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle
-} from "./ui/card";
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -23,9 +20,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from "./ui/form";
-import { Input } from "./ui/input";
-import { useToast } from "./ui/use-toast";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
+// Utilities
+import { frontendApi } from "@/lib/api";
 
 const loginFormSchema = z.object({
   email: z.string().email("Endereço de e-mail inválido"),
