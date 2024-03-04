@@ -1,8 +1,13 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+// Utilities
+import { frontendApi } from "@/lib/api";
+
+// Components
 import { Button } from "./ui/button";
 import {
   Card,
@@ -20,6 +25,7 @@ import {
   FormMessage
 } from "./ui/form";
 import { Input } from "./ui/input";
+import { useToast } from "./ui/use-toast";
 
 const loginFormSchema = z.object({
   email: z.string().email("Endereço de e-mail inválido"),
@@ -29,6 +35,9 @@ const loginFormSchema = z.object({
 type LoginSchemaType = z.infer<typeof loginFormSchema>;
 
 export const LoginForm = () => {
+  const router = useRouter();
+  const { toast } = useToast();
+
   const form = useForm<LoginSchemaType>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -37,8 +46,20 @@ export const LoginForm = () => {
     }
   });
 
-  const onLoginSubmit = (data: LoginSchemaType) => {
-    console.log(data);
+  const onLoginSubmit = async (data: LoginSchemaType) => {
+    try {
+      const results = await frontendApi.post("auth/login", data);
+      const token = results.data;
+      if (token) {
+        router.push("/dashboard");
+      }
+    } catch (e) {
+      toast({
+        variant: "destructive",
+        title: "Erro",
+        description: "E-mail e/ou senha inválidos"
+      });
+    }
   };
 
   return (
