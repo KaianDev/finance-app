@@ -3,6 +3,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Poppins as FontSans } from "next/font/google";
 
+import { ThemeProvider } from "@/components/theme-providers";
 import { cn } from "@/lib/utils";
 
 const fontSans = FontSans({
@@ -22,14 +23,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" suppressHydrationWarning>
       <body
         className={cn(
           fontSans.variable,
-          "bg-background min-h-dvh font-sans antialiased"
+          "min-h-dvh bg-background font-sans antialiased"
         )}
       >
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
