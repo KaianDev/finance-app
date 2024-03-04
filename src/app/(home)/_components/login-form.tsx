@@ -62,7 +62,7 @@ export const LoginForm = () => {
   };
 
   return (
-    <Card>
+    <Card className="bg-zinc-200 dark:bg-card">
       <CardHeader>
         <CardTitle>Fazer Login</CardTitle>
         <CardDescription>
@@ -81,7 +81,7 @@ export const LoginForm = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>E-mail</FormLabel>
-                  <FormControl>
+                  <FormControl className="bg-background">
                     <Input placeholder="Digite seu e-mail" {...field} />
                   </FormControl>
                   <FormMessage />
@@ -95,7 +95,7 @@ export const LoginForm = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Senha</FormLabel>
-                  <FormControl>
+                  <FormControl className="bg-background">
                     <Input
                       type="password"
                       placeholder="Digite sua senha"

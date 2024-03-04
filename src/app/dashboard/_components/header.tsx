@@ -7,12 +7,12 @@ import { Card, CardContent } from "@/components/ui/card";
 export const Header = () => {
   return (
     <header>
-      <Card className="flex items-center justify-between rounded-t-none pr-5">
+      <Card className="flex items-center justify-between rounded-t-none border-0 bg-zinc-800 pr-5 dark:bg-card">
         <CardContent>
           <Link href="/dashboard">
             <div className="flex items-center gap-2 pt-5">
               <CircleDollarSign size={40} className="text-primary" />
-              <h1 className="text-2xl font-bold">Money Manager</h1>
+              <h1 className="text-2xl font-bold text-white">Money Manager</h1>
             </div>
           </Link>
         </CardContent>
