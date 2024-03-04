@@ -1,7 +1,9 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { ScaleLoader } from "react-spinners";
 import { z } from "zod";
 
 // Components
@@ -34,6 +36,7 @@ const loginFormSchema = z.object({
 type LoginSchemaType = z.infer<typeof loginFormSchema>;
 
 export const LoginForm = () => {
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
 
@@ -47,6 +50,7 @@ export const LoginForm = () => {
 
   const onLoginSubmit = async (data: LoginSchemaType) => {
     try {
+      setLoading(true);
       const results = await frontendApi.post("auth/login", data);
       const token = results.data;
       if (token) {
@@ -58,6 +62,8 @@ export const LoginForm = () => {
         title: "Erro",
         description: "E-mail e/ou senha inválidos"
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -106,7 +112,9 @@ export const LoginForm = () => {
                 </FormItem>
               )}
             />
-            <Button>Entrar</Button>
+            <Button disabled={loading}>
+              {!loading ? "Entrar" : <ScaleLoader height={18} color="black" />}
+            </Button>
           </form>
         </Form>
       </CardContent>
