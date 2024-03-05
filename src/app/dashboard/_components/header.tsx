@@ -1,7 +1,7 @@
 import { CircleDollarSign } from "lucide-react";
 import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
+import { SignOutButton } from "@/components/sign-out-button";
 import { Card, CardContent } from "@/components/ui/card";
 
 export const Header = () => {
@@ -17,7 +17,7 @@ export const Header = () => {
           </Link>
         </CardContent>
 
-        <Button variant="destructive">Sair</Button>
+        <SignOutButton />
       </Card>
     </header>
   );
