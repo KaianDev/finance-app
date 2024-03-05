@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import { ScaleLoader } from "react-spinners";
 import { z } from "zod";
 
-// Components
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -25,7 +24,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-// Utilities
+import { useAuth } from "@/context/auth.context";
 import { frontendApi } from "@/lib/api";
 
 const loginFormSchema = z.object({
@@ -37,6 +36,7 @@ type LoginSchemaType = z.infer<typeof loginFormSchema>;
 
 export const LoginForm = () => {
   const [loading, setLoading] = useState(false);
+  const { signIn } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
 
@@ -52,8 +52,9 @@ export const LoginForm = () => {
     try {
       setLoading(true);
       const results = await frontendApi.post("auth/login", data);
-      const token = results.data;
+      const token = results.data as string;
       if (token) {
+        signIn(token);
         router.push("/dashboard");
       }
     } catch (e) {

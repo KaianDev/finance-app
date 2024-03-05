@@ -3,9 +3,9 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Poppins as FontSans } from "next/font/google";
 
-import { ThemeProvider } from "@/components/theme-providers";
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
+import { Providers } from "@/providers";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -31,15 +31,10 @@ export default function RootLayout({
           "min-h-dvh bg-background font-sans antialiased"
         )}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <Providers>
           {children}
           <Toaster />
-        </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );
