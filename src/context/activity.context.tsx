@@ -35,9 +35,7 @@ export const ActivityContextProvider = ({
 
   const deleteActivity = async (id: number) => {
     try {
-      await frontendApi.delete("/activities", {
-        params: { id }
-      });
+      await frontendApi.delete(`/activities/${id}`, {});
       getActivities();
       return true;
     } catch (error) {
@@ -52,7 +50,7 @@ export const ActivityContextProvider = ({
 
   useEffect(() => {
     refreshActivities();
-  }, [activities]);
+  }, []);
 
   return (
     <ActivityContext.Provider
