@@ -19,38 +19,70 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
+import { toast } from "@/components/ui/use-toast";
+import { useActivity } from "@/context/activity.context";
+import { frontendApi } from "@/lib/api";
 
 import { DatePicker } from "./date-picker";
 
 enum EnumType {
-  EXPENSE = "EXPENSE",
-  REVENUE = "REVENUE"
+  REVENUE = "REVENUE",
+  EXPENSE = "EXPENSE"
 }
 
 const activityFormSchema = z.object({
   date: z.date({ required_error: "O campo é obrigatório" }),
-  description: z.string({ required_error: "O campo é obrigatório" }),
+  description: z.string({
+    required_error: "O campo é obrigatório"
+  }),
   value: z.coerce
-    .number({ required_error: "O campo é obrigatório" })
+    .number({
+      required_error: "O campo é obrigatório",
+      invalid_type_error: "Insira um valor"
+    })
     .min(0.01, "O valor tem que ser maior que zero"),
-  type: z.nativeEnum(EnumType)
+  type: z.nativeEnum(EnumType, { required_error: "O campo é obrigatório" })
 });
 
 type ActivityFormSchemaType = z.infer<typeof activityFormSchema>;
 
 export const ActivityForm = () => {
+  const { refreshActivities } = useActivity();
   const form = useForm<ActivityFormSchemaType>({
     resolver: zodResolver(activityFormSchema),
     defaultValues: {
-      description: "",
       date: new Date()
     }
   });
+
+  const handleInsertActivitySubmit = async (data: ActivityFormSchemaType) => {
+    try {
+      const results = await frontendApi.post("/activities", data);
+      if (results) {
+        await refreshActivities();
+        toast({
+          title: "Atividade Inserida",
+          description: `A ${data.type === "REVENUE" ? "receita" : "despesa"} foi inserida com sucesso!`
+        });
+        form.reset();
+      }
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Erro ao inserir atividade!",
+        variant: "destructive"
+      });
+    }
+  };
+
   return (
     <div className="space-y-4">
       <h2>Insira suas atividades</h2>
       <Form {...form}>
-        <form className="flex flex-col gap-5 md:flex-row">
+        <form
+          className="flex flex-col gap-5 md:flex-row"
+          onSubmit={form.handleSubmit(handleInsertActivitySubmit)}
+        >
           <FormField
             control={form.control}
             name="date"
@@ -103,8 +135,8 @@ export const ActivityForm = () => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value={EnumType.REVENUE}>Entrada</SelectItem>
-                    <SelectItem value={EnumType.EXPENSE}>Saída</SelectItem>
+                    <SelectItem value={EnumType.REVENUE}>Receita</SelectItem>
+                    <SelectItem value={EnumType.EXPENSE}>Despesa</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />

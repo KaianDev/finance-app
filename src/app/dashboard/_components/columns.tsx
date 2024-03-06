@@ -36,7 +36,7 @@ export const columns: ColumnDef<Activity>[] = [
       return (
         <p
           className={
-            type === "EXPENSE"
+            type === "REVENUE"
               ? "text-green-500 dark:text-emerald-500"
               : "text-red-500"
           }
@@ -51,13 +51,17 @@ export const columns: ColumnDef<Activity>[] = [
     header: "Tipo",
     cell: ({ row }) => {
       const type = row.getValue("type") as string;
-      const formattedType = type === "EXPENSE" ? "Receita" : "Despesa";
+      const formattedType = type === "EXPENSE" ? "Despesa" : "Receita";
 
       return <p>{formattedType}</p>;
     }
   },
   {
     accessorKey: "action",
-    header: ""
+    header: "",
+    cell: ({ row }) => {
+      const id = row.getValue("id") as number;
+      return <p>{id}</p>;
+    }
   }
 ];

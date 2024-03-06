@@ -1,26 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
-
-import { frontendApi } from "@/lib/api";
-import { Activity } from "@/types/activity";
+import { useActivity } from "@/context/activity.context";
 
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 
 export const ActivityDataTable = () => {
-  const [data, setData] = useState<Activity[]>([]);
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const results = await frontendApi.get("/activities");
-        const data = results.data as Activity[];
-        setData(data);
-      } catch (error) {
-        setData([]);
-      }
-    };
-    getData();
-  }, []);
+  const { activities } = useActivity();
 
-  return <DataTable columns={columns} data={data} />;
+  return <DataTable columns={columns} data={activities} />;
 };

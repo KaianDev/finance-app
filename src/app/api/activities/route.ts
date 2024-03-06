@@ -27,3 +27,24 @@ export const GET = async (request: NextRequest) => {
     });
   }
 };
+
+export const POST = async (request: NextRequest) => {
+  const authToken = getToken(request);
+
+  try {
+    if (authToken) {
+      const data = await request.json();
+      const results = await backendApi.post("activity/add", data, {
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        }
+      });
+      const response = results.data;
+      return new NextResponse(JSON.stringify(response), { status: 201 });
+    }
+  } catch (error) {
+    return new NextResponse(JSON.stringify({ message: "Ocorreu um erro" }), {
+      status: 500
+    });
+  }
+};
