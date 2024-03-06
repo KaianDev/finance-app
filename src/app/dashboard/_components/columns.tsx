@@ -3,6 +3,8 @@ import { ColumnDef } from "@tanstack/react-table";
 
 import { Activity } from "@/types/activity";
 
+import { DeleteActivityButton } from "./delete-activity-button";
+
 export const columns: ColumnDef<Activity>[] = [
   {
     accessorKey: "date",
@@ -37,8 +39,8 @@ export const columns: ColumnDef<Activity>[] = [
         <p
           className={
             type === "REVENUE"
-              ? "text-green-500 dark:text-emerald-500"
-              : "text-red-500"
+              ? "font-semibold text-green-500 dark:text-emerald-500"
+              : "font-semibold text-red-500"
           }
         >
           {formattedValue}
@@ -57,11 +59,15 @@ export const columns: ColumnDef<Activity>[] = [
     }
   },
   {
-    accessorKey: "action",
+    accessorKey: "actions",
     header: "",
     cell: ({ row }) => {
-      const id = row.getValue("id") as number;
-      return <p>{id}</p>;
+      const activity = row.original;
+      return (
+        <div>
+          <DeleteActivityButton activity={activity} key={activity.id} />
+        </div>
+      );
     }
   }
 ];
