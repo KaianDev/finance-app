@@ -2,6 +2,7 @@
 
 import { ThemeProvider } from "next-themes";
 
+import { ActivityContextProvider } from "@/context/activity.context";
 import { AuthContextProvider } from "@/context/auth.context";
 
 interface ProvidersProps {
@@ -16,7 +17,9 @@ export const Providers = ({ children }: ProvidersProps) => {
       enableSystem
       disableTransitionOnChange
     >
-      <AuthContextProvider>{children}</AuthContextProvider>
+      <AuthContextProvider>
+        <ActivityContextProvider>{children}</ActivityContextProvider>
+      </AuthContextProvider>
     </ThemeProvider>
   );
 };
