@@ -21,8 +21,7 @@ import {
   SelectValue
 } from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
-import { useActivity } from "@/context/activity.context";
-import { frontendApi } from "@/lib/api";
+import { useAddActivity } from "@/lib/mutation";
 import { cn } from "@/lib/utils";
 
 import { DatePicker } from "./date-picker";
@@ -51,7 +50,7 @@ const activityFormSchema = z.object({
 type ActivityFormSchemaType = z.infer<typeof activityFormSchema>;
 
 export const ActivityForm = () => {
-  const { refreshActivities } = useActivity();
+  const addActivity = useAddActivity();
   const form = useForm<ActivityFormSchemaType>({
     resolver: zodResolver(activityFormSchema),
     defaultValues: {
@@ -68,23 +67,21 @@ export const ActivityForm = () => {
     form.formState.errors.value;
 
   const handleInsertActivitySubmit = async (data: ActivityFormSchemaType) => {
-    try {
-      const results = await frontendApi.post("/activities", data);
-      if (results) {
-        await refreshActivities();
+    await addActivity.mutateAsync(data, {
+      onSuccess() {
         toast({
           title: "Atividade Inserida",
           description: `A ${data.type === "REVENUE" ? "receita" : "despesa"} foi inserida com sucesso!`
         });
-        form.reset();
+      },
+      onError() {
+        toast({
+          title: "Erro",
+          description: "Erro ao inserir atividade!",
+          variant: "destructive"
+        });
       }
-    } catch (error) {
-      toast({
-        title: "Erro",
-        description: "Erro ao inserir atividade!",
-        variant: "destructive"
-      });
-    }
+    });
   };
 
   return (

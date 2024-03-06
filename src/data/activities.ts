@@ -11,6 +11,22 @@ export const getActivities = async (): Promise<Activity[]> => {
   }
 };
 
+export interface DataAddTypeRequest {
+  description: string;
+  value: number;
+  type: "EXPENSE" | "REVENUE";
+  date: Date;
+}
+
+export const addActivity = async (data: DataAddTypeRequest) => {
+  try {
+    const results = await frontendApi.post("/activities", data);
+    return results.data;
+  } catch {
+    return false;
+  }
+};
+
 export const deleteActivity = async (id: number) => {
   try {
     await frontendApi.delete(`/activities/${id}`);
