@@ -12,7 +12,7 @@ export const Header = () => {
           <Link href="/dashboard">
             <div className="flex items-center gap-2 pt-5">
               <CircleDollarSign size={40} className="text-primary" />
-              <h1 className="text-2xl font-bold text-white">Money Manager</h1>
+              <h1 className="text-3xl font-bold text-white">fnce.</h1>
             </div>
           </Link>
         </CardContent>
