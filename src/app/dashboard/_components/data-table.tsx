@@ -33,12 +33,15 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="py-5">
-      <Table>
+      <Table className="overflow-hidden rounded-md">
         <TableHeader>
           {table.getHeaderGroups().map(headerGroup => (
-            <TableRow key={headerGroup.id}>
+            <TableRow
+              key={headerGroup.id}
+              className="bg-zinc-800 hover:bg-zinc-800 dark:bg-background dark:hover:bg-background"
+            >
               {headerGroup.headers.map(header => (
-                <TableHead key={header.id}>
+                <TableHead key={header.id} className="font-bold text-zinc-200">
                   {header.isPlaceholder
                     ? null
                     : flexRender(
@@ -56,6 +59,7 @@ export function DataTable<TData, TValue>({
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
+                className="border-b border-zinc-800/50 dark:border-zinc-200/50"
               >
                 {row.getVisibleCells().map(cell => (
                   <TableCell key={cell.id}>

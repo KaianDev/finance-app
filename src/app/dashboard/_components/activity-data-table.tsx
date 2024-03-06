@@ -1,18 +1,26 @@
-import { columns, Payment } from "./columns";
+"use client";
+import { useEffect, useState } from "react";
+
+import { frontendApi } from "@/lib/api";
+import { Activity } from "@/types/activity";
+
+import { columns } from "./columns";
 import { DataTable } from "./data-table";
 
-const getData = (): Payment[] => {
-  return [
-    {
-      id: "aaa",
-      amount: 2000,
-      email: "a@g.com",
-      status: "failed"
-    }
-  ];
-};
-
 export const ActivityDataTable = () => {
-  const data = getData();
+  const [data, setData] = useState<Activity[]>([]);
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const results = await frontendApi.get("/activities");
+        const data = results.data as Activity[];
+        setData(data);
+      } catch (error) {
+        setData([]);
+      }
+    };
+    getData();
+  }, []);
+
   return <DataTable columns={columns} data={data} />;
 };
