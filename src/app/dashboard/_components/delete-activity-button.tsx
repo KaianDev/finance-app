@@ -25,10 +25,10 @@ interface DeleteActivityButtonProps {
 export const DeleteActivityButton = ({
   activity
 }: DeleteActivityButtonProps) => {
-  const deleteActivity = useDeleteActivity(activity.id);
+  const deleteActivity = useDeleteActivity();
 
   const handleDeleteClick = async () => {
-    await deleteActivity.mutateAsync(undefined, {
+    await deleteActivity.mutateAsync(activity.id, {
       onSuccess() {
         toast({
           title: "Atividade Excluída",
