@@ -23,6 +23,10 @@ export const ActivityContextProvider = ({
 }: ActivityContextProviderProps) => {
   const [activities, setActivities] = useState<Activity[]>([]);
 
+  useEffect(() => {
+    refreshActivities();
+  }, []);
+
   const getActivities = async () => {
     try {
       const results = await frontendApi.get("/activities");
@@ -47,10 +51,6 @@ export const ActivityContextProvider = ({
     const activities = await getActivities();
     setActivities(activities);
   };
-
-  useEffect(() => {
-    refreshActivities();
-  }, []);
 
   return (
     <ActivityContext.Provider

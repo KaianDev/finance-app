@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
-import { useActivity } from "@/context/activity.context";
+import { useDeleteActivity } from "@/lib/mutation";
 import { Activity } from "@/types/activity";
 
 interface DeleteActivityButtonProps {
@@ -25,23 +25,24 @@ interface DeleteActivityButtonProps {
 export const DeleteActivityButton = ({
   activity
 }: DeleteActivityButtonProps) => {
-  const { deleteActivity, refreshActivities } = useActivity();
+  const deleteActivity = useDeleteActivity(activity.id);
 
   const handleDeleteClick = async () => {
-    try {
-      await deleteActivity(activity.id);
-      await refreshActivities();
-      toast({
-        title: "Atividade Excluída",
-        description: "Atividade excluída com sucesso"
-      });
-    } catch (e) {
-      toast({
-        title: "Erro",
-        description: "Ocorreu um erro ao tentar excluir a atividade",
-        variant: "destructive"
-      });
-    }
+    await deleteActivity.mutateAsync(undefined, {
+      onSuccess() {
+        toast({
+          title: "Atividade Excluída",
+          description: "Atividade excluída com sucesso"
+        });
+      },
+      onError() {
+        toast({
+          title: "Erro",
+          description: "Ocorreu um erro ao tentar excluir a atividade",
+          variant: "destructive"
+        });
+      }
+    });
   };
 
   return (
