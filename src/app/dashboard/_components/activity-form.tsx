@@ -87,7 +87,9 @@ export const ActivityForm = () => {
 
   return (
     <div className="space-y-4">
-      <h2>Insira suas atividades</h2>
+      <h2 className="text-center text-2xl font-semibold text-emerald-500">
+        Insira suas atividades
+      </h2>
       <Form {...form}>
         <form
           className={cn(
