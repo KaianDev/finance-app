@@ -63,11 +63,7 @@ export const columns: ColumnDef<Activity>[] = [
     header: "",
     cell: ({ row }) => {
       const activity = row.original;
-      return (
-        <div>
-          <DeleteActivityButton activity={activity} key={activity.id} />
-        </div>
-      );
+      return <DeleteActivityButton activity={activity} key={activity.id} />;
     }
   }
 ];
