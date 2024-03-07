@@ -73,6 +73,7 @@ export const ActivityForm = () => {
           title: "Atividade Inserida",
           description: `A ${data.type === "REVENUE" ? "receita" : "despesa"} foi inserida com sucesso!`
         });
+        form.reset();
       },
       onError() {
         toast({
