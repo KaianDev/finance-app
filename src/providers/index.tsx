@@ -2,7 +2,6 @@
 
 import { ThemeProvider } from "next-themes";
 
-import { ActivityContextProvider } from "@/context/activity.context";
 import { AuthContextProvider } from "@/context/auth.context";
 
 import { TanstackProvider } from "./tanstack-provider";
@@ -20,9 +19,7 @@ export const Providers = ({ children }: ProvidersProps) => {
       disableTransitionOnChange
     >
       <AuthContextProvider>
-        <ActivityContextProvider>
-          <TanstackProvider>{children}</TanstackProvider>
-        </ActivityContextProvider>
+        <TanstackProvider>{children}</TanstackProvider>
       </AuthContextProvider>
     </ThemeProvider>
   );
