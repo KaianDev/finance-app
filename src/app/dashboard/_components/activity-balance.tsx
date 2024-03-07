@@ -4,7 +4,7 @@ import { useActivityBalance } from "@/lib/query";
 import { cn } from "@/lib/utils";
 
 export const ActivityBalance = () => {
-  const { data } = useActivityBalance();
+  const { data, isFetching } = useActivityBalance();
 
   if (data) {
     const formattedBalance = {
@@ -12,7 +12,7 @@ export const ActivityBalance = () => {
         style: "currency",
         currency: "BRL"
       }),
-      color: data > 0 ? "text-green-500" : "text-red-500"
+      color: data > 0 ? "text-green-500 dark:text-emerald-500" : "text-red-500"
     };
 
     return (
@@ -25,5 +25,6 @@ export const ActivityBalance = () => {
     );
   }
 
-  return <div className="py-5">Calculando...</div>;
+  if (isFetching) return <div className="py-5">Calculando...</div>;
+  return <div></div>;
 };
