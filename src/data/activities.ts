@@ -35,3 +35,13 @@ export const deleteActivity = async (id: number) => {
     return false;
   }
 };
+
+export const getActivityBalance = async () => {
+  try {
+    const results = await frontendApi.get("/activities/balance");
+    const balance = results.data.balance as number;
+    return balance;
+  } catch (error) {
+    return false;
+  }
+};
