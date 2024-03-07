@@ -13,14 +13,14 @@ export const GET = async (request: NextRequest) => {
         "Content-Type": "application/pdf",
         Accept: "application/pdf"
       },
-      responseType: "blob"
+      responseType: "arraybuffer"
     });
 
-    const file = new Blob([results.data], {
-      type: "application/pdf"
-    });
-    const fileURL = URL.createObjectURL(file);
-    return new NextResponse(fileURL);
+    const base64Url = btoa(
+      String.fromCharCode(...new Uint8Array(results.data))
+    );
+    const pdfDataUrl = `data:application/pdf;base64,${base64Url}`;
+    return new NextResponse(pdfDataUrl);
   } catch (error) {
     return new NextResponse(JSON.stringify({ message: "Ocorreu um erro" }), {
       status: 500

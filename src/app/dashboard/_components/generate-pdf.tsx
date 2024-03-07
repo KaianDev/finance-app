@@ -1,24 +1,20 @@
 "use client";
-
-// import { useState } from "react";
-
 import { Button } from "@/components/ui/button";
+// import { usePdf } from "@/context/pdf.context";
 import { getPDF } from "@/data/activities";
+// import { useRouter } from "next/navigation";
 
 export const GeneratePDF = () => {
-  // const [pdfURL, setPdfURL] = useState("");
+  // const { setPdf } = usePdf();
+  // const router = useRouter();
   const handleGeneratePDFClick = async () => {
     const pdf = await getPDF();
     if (pdf) {
-      window.open(pdf, "_blank");
-      // setPdfURL(pdf);
+      // setPdf(pdf);
+      // router.push("/pdf")
+      window.open(pdf);
     }
   };
 
-  return (
-    <div>
-      <Button onClick={handleGeneratePDFClick}>Gerar Pdf</Button>
-      {/* <iframe src={pdfURL} width="100%" height="600px" allowFullScreen></iframe> */}
-    </div>
-  );
+  return <Button onClick={handleGeneratePDFClick}>Gerar Pdf</Button>;
 };
