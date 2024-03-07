@@ -1,14 +1,20 @@
-import { CircleDollarSign } from "lucide-react";
+import Image from "next/image";
 
 import { LoginForm } from "@/app/(home)/_components/login-form";
 import { ModeToggle } from "@/components/mode-toggle";
 
 export default function Home() {
   return (
-    <div>
-      <header className="flex items-center justify-center gap-2 py-10">
-        <CircleDollarSign size={40} className="text-primary" />
-        <h1 className="text-3xl font-bold">fnce.</h1>
+    <div className="pt-28">
+      <header className="flex items-center justify-center gap-2 py-5">
+        <Image
+          src="/assets/fnce.png"
+          alt="Logo fnce."
+          width={0}
+          height={0}
+          sizes="100%"
+          className="mb-8 h-auto w-36"
+        />
       </header>
       <div className="fixed right-4 top-4">
         <ModeToggle />

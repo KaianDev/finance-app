@@ -21,7 +21,7 @@ export const GeneratePDF = () => {
   };
 
   return (
-    <Button size="sm" onClick={handleGeneratePDFClick}>
+    <Button onClick={handleGeneratePDFClick}>
       Gerar Pdf
       <FileText className="ml-2 size-4" />
     </Button>
