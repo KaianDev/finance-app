@@ -1,6 +1,7 @@
 import { ActivityBalance } from "./_components/activity-balance";
 import { ActivityDataTable } from "./_components/activity-data-table";
 import { ActivityForm } from "./_components/activity-form";
+import { GeneratePDF } from "./_components/generate-pdf";
 
 const DashboardPage = () => {
   return (
@@ -9,6 +10,7 @@ const DashboardPage = () => {
         <ActivityForm />
         <ActivityDataTable />
         <ActivityBalance />
+        <GeneratePDF />
       </div>
     </div>
   );

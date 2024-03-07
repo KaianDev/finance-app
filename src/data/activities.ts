@@ -45,3 +45,13 @@ export const getActivityBalance = async () => {
     return false;
   }
 };
+
+export const getPDF = async () => {
+  try {
+    const results = await frontendApi.get("activities/pdf");
+    const pdf = results.data as string;
+    return pdf;
+  } catch {
+    return false;
+  }
+};
