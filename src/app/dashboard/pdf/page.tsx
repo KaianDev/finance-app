@@ -1,14 +1,16 @@
 "use client";
 
-const PdfPage = () => {
-  const pdfBase64 = localStorage.getItem("pdf-base64-file");
+import { usePdf } from "@/context/pdf.context";
 
-  if (!pdfBase64) return;
+const PdfPage = () => {
+  const { pdf } = usePdf();
+
+  if (!pdf) return;
   return (
     <div className="flex min-h-[calc(100vh-150px)]  justify-center ">
       <iframe
         className="my-5 min-h-[calc(100vh-150px)] w-[90%]"
-        src={pdfBase64}
+        src={pdf}
       ></iframe>
     </div>
   );
