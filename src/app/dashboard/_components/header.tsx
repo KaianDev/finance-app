@@ -8,7 +8,7 @@ export const Header = () => {
   return (
     <header>
       <Card className="flex items-center justify-between rounded-t-none border-0 bg-zinc-800 pr-5 dark:bg-card">
-        <CardContent className="pt-6">
+        <CardContent className="py-3 md:p-6 md:pt-6">
           <Link href="/dashboard">
             <Image
               src="/assets/fnce.png"
@@ -16,7 +16,7 @@ export const Header = () => {
               width={0}
               height={0}
               sizes="100%"
-              className="aspect-auto h-auto w-28"
+              className="aspect-auto h-auto w-16 p-0 sm:w-20 md:w-28"
             />
           </Link>
         </CardContent>

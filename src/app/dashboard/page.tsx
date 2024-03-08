@@ -9,7 +9,7 @@ const DashboardPage = () => {
       <div className="rounded-md bg-zinc-200 p-5 shadow-lg shadow-black/20 dark:bg-secondary">
         <ActivityForm />
         <ActivityDataTable />
-        <div className="flex items-center justify-between gap-8 md:justify-center">
+        <div className="flex flex-col items-center justify-between sm:flex-row sm:gap-8 md:justify-center">
           <ActivityBalance />
           <GeneratePDF />
         </div>
