@@ -19,7 +19,7 @@ export const GET = async (request: NextRequest) => {
     const base64Url = btoa(
       String.fromCharCode(...new Uint8Array(results.data))
     );
-    const pdfDataUrl = `data:application/pdf;base64,${base64Url}`;
+    const pdfDataUrl = `data:application/pdf;headers=filename%3D;base64,${base64Url}`;
     return new NextResponse(pdfDataUrl);
   } catch (error) {
     return new NextResponse(JSON.stringify({ message: "Ocorreu um erro" }), {
