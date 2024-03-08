@@ -114,7 +114,7 @@ export const LoginForm = () => {
               )}
             />
             <Button disabled={loading}>
-              {!loading ? "Entrar" : <ScaleLoader height={18} color="black" />}
+              {!loading ? "Entrar" : <ScaleLoader height={18} color="white" />}
             </Button>
           </form>
         </Form>
