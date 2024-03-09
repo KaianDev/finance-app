@@ -1,6 +1,7 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
 
+import { cn } from "@/lib/utils";
 import { Activity } from "@/types/activity";
 
 import { DeleteActivityButton } from "./delete-activity-button";
@@ -8,20 +9,37 @@ import { DeleteActivityButton } from "./delete-activity-button";
 export const columns: ColumnDef<Activity>[] = [
   {
     accessorKey: "date",
-    header: "Data",
-    cell: ({ row }) => {
+    header: ({ column }) => {
+      return (
+        <div className={cn(column.id === "date" && "hidden sm:table-cell")}>
+          Tipo
+        </div>
+      );
+    },
+    cell: ({ row, column }) => {
       const date = new Date(row.getValue("date"));
       const formattedDate = date.toLocaleDateString();
 
-      return <>{formattedDate}</>;
+      return (
+        <div className={cn(column.id === "date" && "hidden sm:table-cell")}>
+          {formattedDate}
+        </div>
+      );
     }
   },
   {
     accessorKey: "description",
     header: "Descrição",
     cell: ({ row }) => {
+      const date = new Date(row.getValue("date") as string);
+      const formattedDate = date.toLocaleDateString();
       const description = row.getValue("description") as string;
-      return <p className="truncate">{description}</p>;
+      return (
+        <div>
+          <p className="truncate font-semibold sm:font-normal">{description}</p>
+          <p className="text-xs sm:hidden">{formattedDate}</p>
+        </div>
+      );
     }
   },
   {
@@ -30,13 +48,14 @@ export const columns: ColumnDef<Activity>[] = [
     cell: ({ row }) => {
       const value = row.getValue("value") as number;
       const type = row.getValue("type") as string;
+
       const formattedValue = value.toLocaleString("pt-br", {
         style: "currency",
         currency: "BRL"
       });
 
       return (
-        <p
+        <div
           className={
             type === "REVENUE"
               ? "font-semibold text-green-500 dark:text-emerald-500"
@@ -44,18 +63,28 @@ export const columns: ColumnDef<Activity>[] = [
           }
         >
           {formattedValue}
-        </p>
+        </div>
       );
     }
   },
   {
     accessorKey: "type",
-    header: "Tipo",
-    cell: ({ row }) => {
+    header: ({ column }) => {
+      return (
+        <div className={cn(column.id === "type" && "hidden sm:table-cell")}>
+          Tipo
+        </div>
+      );
+    },
+    cell: ({ row, column }) => {
       const type = row.getValue("type") as string;
       const formattedType = type === "EXPENSE" ? "Despesa" : "Receita";
 
-      return <p>{formattedType}</p>;
+      return (
+        <p className={cn(column.id === "type" && "hidden sm:table-cell")}>
+          {formattedType}
+        </p>
+      );
     }
   },
   {
