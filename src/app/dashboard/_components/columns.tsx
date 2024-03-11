@@ -12,7 +12,7 @@ export const columns: ColumnDef<Activity>[] = [
     header: ({ column }) => {
       return (
         <div className={cn(column.id === "date" && "hidden sm:table-cell")}>
-          Tipo
+          Data
         </div>
       );
     },
