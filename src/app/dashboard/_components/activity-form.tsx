@@ -26,11 +26,6 @@ import { cn } from "@/lib/utils";
 
 import { DatePicker } from "./date-picker";
 
-enum EnumType {
-  REVENUE = "REVENUE",
-  EXPENSE = "EXPENSE"
-}
-
 const activityFormSchema = z.object({
   date: z.date({ required_error: "O campo é obrigatório" }),
   description: z
@@ -39,12 +34,14 @@ const activityFormSchema = z.object({
     })
     .min(2, "Campo obrigatório"),
   value: z.coerce
-    .number({
+    .string({
       required_error: "O campo é obrigatório",
       invalid_type_error: "Insira um valor"
     })
-    .min(0.01, "O valor inválido"),
-  type: z.nativeEnum(EnumType, { required_error: "O campo é obrigatório" })
+    .min(1, "Campo obrigatório"),
+  type: z.enum(["REVENUE", "EXPENSE"], {
+    required_error: "O campo é obrigatório"
+  })
 });
 
 type ActivityFormSchemaType = z.infer<typeof activityFormSchema>;
@@ -56,7 +53,7 @@ export const ActivityForm = () => {
     defaultValues: {
       date: new Date(),
       description: "",
-      value: 0
+      value: ""
     }
   });
 
@@ -67,22 +64,52 @@ export const ActivityForm = () => {
     form.formState.errors.value;
 
   const handleInsertActivitySubmit = async (data: ActivityFormSchemaType) => {
-    await addActivity.mutateAsync(data, {
-      onSuccess() {
-        toast({
-          title: "Atividade Inserida",
-          description: `A ${data.type === "REVENUE" ? "receita" : "despesa"} foi inserida com sucesso!`
-        });
-        form.reset();
+    const numValue = parseFloat(data.value);
+    if (isNaN(numValue)) {
+      form.setError("value", {
+        type: "manual",
+        message: "Insira um valor"
+      });
+      return;
+    }
+    if (numValue < 0) {
+      form.setError("value", {
+        type: "nonPositiveValue",
+        message: "Insira um valor válido"
+      });
+      return;
+    }
+    if (numValue === 0) {
+      form.setError("value", {
+        type: "zeroValue",
+        message: "Insira um valor válido"
+      });
+      return;
+    }
+    await addActivity.mutateAsync(
+      {
+        ...data,
+        type: data.type === "REVENUE" ? "REVENUE" : "EXPENSE",
+        value: numValue
       },
-      onError() {
-        toast({
-          title: "Erro",
-          description: "Erro ao inserir atividade!",
-          variant: "destructive"
-        });
+      {
+        onSuccess() {
+          toast({
+            title: "Atividade Inserida",
+            description: `A ${data.type === "REVENUE" ? "receita" : "despesa"} foi inserida com sucesso!`
+          });
+          form.reset();
+          form.setValue("type", data.type);
+        },
+        onError() {
+          toast({
+            title: "Erro",
+            description: "Erro ao inserir atividade!",
+            variant: "destructive"
+          });
+        }
       }
-    });
+    );
   };
 
   return (
@@ -96,6 +123,7 @@ export const ActivityForm = () => {
             "flex flex-col gap-5 md:flex-row",
             hasError ? "md:items-start" : "md:items-end"
           )}
+          method="post"
           onSubmit={form.handleSubmit(handleInsertActivitySubmit)}
         >
           <FormField
@@ -147,15 +175,18 @@ export const ActivityForm = () => {
             render={({ field }) => (
               <FormItem className="w-full md:w-[450px]">
                 <FormLabel>Tipo</FormLabel>
-                <Select onValueChange={field.onChange}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl className="bg-background">
                     <SelectTrigger>
                       <SelectValue placeholder="Selecione..." />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value={EnumType.REVENUE}>Receita</SelectItem>
-                    <SelectItem value={EnumType.EXPENSE}>Despesa</SelectItem>
+                    <SelectItem value="REVENUE">Receita</SelectItem>
+                    <SelectItem value="EXPENSE">Despesa</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
