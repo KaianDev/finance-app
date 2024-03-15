@@ -1,5 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -194,7 +195,10 @@ export const ActivityForm = () => {
             )}
           />
           <div className={cn(hasError ? "md:self-center" : "md:self-end")}>
-            <Button type="submit">Adicionar</Button>
+            <Button type="submit" className="w-full">
+              <Plus className="mr-2" />
+              Adicionar
+            </Button>
           </div>
         </form>
       </Form>
