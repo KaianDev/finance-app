@@ -11,12 +11,12 @@ import {
   SheetTitle,
   SheetTrigger
 } from "@/components/ui/sheet";
-import { useActivitiesFiltered } from "@/context/activities-filtered.context";
+import { useFilterContext } from "@/context/filter.context";
 
 import { ActivityFilterForm } from "./activity-filter-form";
 
 export const ActivityFilter = () => {
-  const { enabled, setEnabled } = useActivitiesFiltered();
+  const { enabled, setEnabled } = useFilterContext();
 
   return (
     <div className="mt-4 flex items-center justify-between gap-4 sm:justify-start">

@@ -1,5 +1,6 @@
 import { frontendApi } from "@/lib/api";
 import { Activity } from "@/types/activity";
+import { ActivityFilter } from "@/types/activity-filter";
 
 export const getActivities = async (): Promise<Activity[]> => {
   try {
@@ -7,6 +8,17 @@ export const getActivities = async (): Promise<Activity[]> => {
     const activities = results.data as Activity[];
     return activities;
   } catch (error) {
+    return [];
+  }
+};
+
+export const getActivitiesFiltered = async (filter: ActivityFilter) => {
+  try {
+    const results = await frontendApi.get("/activities/filter", {
+      params: filter
+    });
+    return results.data as Activity[];
+  } catch {
     return [];
   }
 };

@@ -24,9 +24,7 @@ import {
 } from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { SheetClose } from "@/components/ui/sheet";
-import { useActivitiesFiltered } from "@/context/activities-filtered.context";
-import { frontendApi } from "@/lib/api";
-import { Activity } from "@/types/activity";
+import { useFilterContext } from "@/context/filter.context";
 
 const activityFilterSchema = z.object({
   date: z
@@ -41,7 +39,7 @@ const activityFilterSchema = z.object({
 type ActivityFilterSchema = z.infer<typeof activityFilterSchema>;
 
 export const ActivityFilterForm = () => {
-  const { setEnabled, setFilteredActivities } = useActivitiesFiltered();
+  const { setEnabled, setFilter } = useFilterContext();
 
   const form = useForm<ActivityFilterSchema>({
     resolver: zodResolver(activityFilterSchema),
@@ -54,22 +52,13 @@ export const ActivityFilterForm = () => {
     }
   });
 
-  const handleActivityFilterSubmit = async (data: ActivityFilterSchema) => {
-    try {
-      const results = await frontendApi.get("/activities/filter", {
-        params: {
-          oneDate: data.date?.from?.toISOString().split("T")[0],
-          secondDate: data.date?.to?.toISOString().split("T")[0],
-          typeValue: data.typeValue
-        }
-      });
-
-      const activities = results.data as Activity[];
-      setEnabled(true);
-      setFilteredActivities(activities);
-    } catch (error) {
-      return;
-    }
+  const handleActivityFilterSubmit = (data: ActivityFilterSchema) => {
+    setFilter({
+      oneDate: data.date?.from?.toISOString().split("T")[0],
+      secondDate: data.date?.to?.toISOString().split("T")[0],
+      typeValue: data.typeValue
+    });
+    setEnabled(true);
   };
 
   const handleActivityFilterClear = () => {
@@ -155,7 +144,9 @@ export const ActivityFilterForm = () => {
           />
 
           <div className="mt-8 space-x-4">
-            <Button type="submit">Filtrar</Button>
+            <SheetClose>
+              <Button type="submit">Filtrar</Button>
+            </SheetClose>
             <SheetClose asChild>
               <Button
                 type="button"

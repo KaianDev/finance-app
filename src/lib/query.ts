@@ -1,6 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getActivities, getActivityBalance } from "@/data/activities";
+import {
+  getActivities,
+  getActivitiesFiltered,
+  getActivityBalance
+} from "@/data/activities";
+import { ActivityFilter } from "@/types/activity-filter";
 
 export const useActivity = () =>
   useQuery({
@@ -12,4 +17,11 @@ export const useActivityBalance = () =>
   useQuery({
     queryKey: ["activities", "balance"],
     queryFn: getActivityBalance
+  });
+
+export const useFilteredActivity = (filter: ActivityFilter, enabled: boolean) =>
+  useQuery({
+    queryKey: ["activities", filter],
+    queryFn: () => getActivitiesFiltered(filter),
+    enabled
   });
