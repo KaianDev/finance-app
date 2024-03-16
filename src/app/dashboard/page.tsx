@@ -1,7 +1,13 @@
+import { Metadata } from "next";
+
 import { ActivityBalance } from "./_components/activity-balance";
 import { ActivityDataTable } from "./_components/activity-data-table";
 import { ActivityForm } from "./_components/activity-form";
 import { GeneratePDF } from "./_components/generate-pdf";
+
+export const metadata: Metadata = {
+  title: "Dashboard | fnce"
+};
 
 const DashboardPage = () => {
   return (
