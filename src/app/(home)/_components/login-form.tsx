@@ -20,7 +20,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "@/context/auth.context";
-import { login } from "@/data/auth";
 
 const loginFormSchema = z.object({
   email: z.string().email("Endereço de e-mail inválido"),
@@ -31,7 +30,7 @@ type LoginSchemaType = z.infer<typeof loginFormSchema>;
 
 export const LoginForm = () => {
   const [loading, setLoading] = useState(false);
-  const { setTokenOnCookies } = useAuth();
+  const { signIn } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
 
@@ -46,12 +45,8 @@ export const LoginForm = () => {
   const onLoginSubmit = async (data: LoginSchemaType) => {
     try {
       setLoading(true);
-
-      const token = await login(data);
-      if (token) {
-        setTokenOnCookies(token);
-        router.push("/dashboard");
-      }
+      await signIn(data);
+      router.push("/dashboard");
     } catch (e) {
       const axiosError = e as AxiosError;
       toast({

@@ -1,11 +1,29 @@
 "use client";
 
-import { deleteCookie, getCookie, setCookie } from "cookies-next";
-import { createContext, useContext, useEffect, useState } from "react";
+import { AxiosError } from "axios";
+import { deleteCookie, setCookie } from "cookies-next";
+import { jwtDecode } from "jwt-decode";
+import { createContext, useContext, useState } from "react";
+
+import { frontendApi } from "@/lib/api";
+import { CustomJwtDecoded } from "@/types/custom-jwt-decoded";
+import { Session } from "@/types/session";
+
+interface SignInData {
+  email: string;
+  password: string;
+}
+
+interface SignUpData {
+  name: string;
+  email: string;
+  password: string;
+}
 
 interface IAuthContext {
-  isAuthenticated: boolean;
-  setTokenOnCookies: (token: string) => void;
+  session: Session | null;
+  signIn: (data: SignInData) => Promise<void>;
+  signUp: (data: SignUpData) => Promise<void>;
   signOut: () => void;
 }
 
@@ -15,32 +33,51 @@ interface AuthContextProviderProps {
   children: React.ReactNode;
 }
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [session, setSession] = useState<Session | null>(null);
 
-  useEffect(() => {
-    const cookie = getCookie("finance-app.token");
-    const token = cookie?.toString();
-    if (token) {
-      setIsAuthenticated(!!token);
+  const signIn = async (data: SignInData) => {
+    try {
+      const results = await frontendApi.post("auth/login", data);
+      const token = results.data as string;
+      if (token) {
+        const decoded = jwtDecode<CustomJwtDecoded>(token);
+        const { name } = decoded;
+        const user = { name };
+        setCookie("finance-app.token", token, {
+          maxAge: 60 * 60 * 3 // 3 hours
+        });
+        setSession(user);
+      }
+    } catch (e) {
+      const axiosError = e as AxiosError;
+      const status = axiosError.response?.status;
+      if (status === 403) {
+        throw new AxiosError("E-mail e/ou Senha incorreto(s)");
+      }
+      throw new AxiosError("Ocorreu um erro no servidor, tente mais tarde");
     }
-  }, []);
-
-  const setTokenOnCookies = (token: string) => {
-    setCookie("finance-app.token", token, {
-      maxAge: 60 * 60 * 3 // 3 hours
-    });
-    setIsAuthenticated(true);
   };
 
   const signOut = () => {
     deleteCookie("finance-app.token");
-    setIsAuthenticated(false);
+    setSession(null);
+  };
+
+  const signUp = async (data: SignUpData) => {
+    try {
+      await frontendApi.post("/auth/sign-up", data);
+    } catch (e) {
+      const axiosError = e as AxiosError;
+      const status = axiosError.response?.status;
+      if (status === 500) {
+        throw new AxiosError("Ocorreu um erro no servidor, tente mais tarde");
+      }
+      throw new AxiosError("Ocorreu um erro desconhecido.");
+    }
   };
 
   return (
-    <AuthContext.Provider
-      value={{ isAuthenticated, setTokenOnCookies, signOut }}
-    >
+    <AuthContext.Provider value={{ session, signIn, signOut, signUp }}>
       {children}
     </AuthContext.Provider>
   );

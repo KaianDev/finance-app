@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-import { signUp } from "@/data/auth";
+import { useAuth } from "@/context/auth.context";
 
 const signUpForm = z.object({
   name: z.string({ required_error: "Campo obrigatório" }),
@@ -35,6 +35,7 @@ type SignUpForm = z.infer<typeof signUpForm>;
 export const SignUpForm = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { signUp } = useAuth();
   const { toast } = useToast();
 
   const form = useForm<SignUpForm>({
@@ -57,7 +58,7 @@ export const SignUpForm = () => {
     const { name, email, password } = data;
     setLoading(true);
     try {
-      signUp({ name, email, password });
+      await signUp({ name, email, password });
       router.replace("/");
     } catch (e) {
       const axiosError = e as AxiosError;
