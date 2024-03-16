@@ -29,13 +29,17 @@ export const columns: ColumnDef<Activity>[] = [
   },
   {
     accessorKey: "description",
-    header: "Descrição",
+    header: () => {
+      const title = "Descrição";
+      return <div className="-ml-4 sm:ml-0">{title}</div>;
+    },
+
     cell: ({ row }) => {
       const date = new Date(row.getValue("date") as string);
       const formattedDate = date.toLocaleDateString();
       const description = row.getValue("description") as string;
       return (
-        <div>
+        <div className="-ml-4 sm:ml-0">
           <p className="truncate font-semibold sm:font-normal">{description}</p>
           <p className="text-xs sm:hidden">{formattedDate}</p>
         </div>
@@ -92,7 +96,11 @@ export const columns: ColumnDef<Activity>[] = [
     header: "",
     cell: ({ row }) => {
       const activity = row.original;
-      return <DeleteActivityButton activity={activity} key={activity.id} />;
+      return (
+        <div className="-ml-5 sm:ml-0">
+          <DeleteActivityButton activity={activity} key={activity.id} />
+        </div>
+      );
     }
   }
 ];
