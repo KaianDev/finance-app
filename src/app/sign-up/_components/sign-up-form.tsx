@@ -69,7 +69,7 @@ export const SignUpForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSignUpSubmit)} className="space-y-5">
+      <form onSubmit={form.handleSubmit(onSignUpSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="email"

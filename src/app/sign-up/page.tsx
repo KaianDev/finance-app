@@ -17,9 +17,9 @@ export const metadata: Metadata = {
   title: "Cadastre-se | fnce"
 };
 
-export default function Home() {
+const SignUpPage = () => {
   return (
-    <div className="pt-28">
+    <div className="py-5 sm:pt-28">
       <header className="flex items-center justify-center gap-2 py-5">
         <Image
           src="/assets/fnce.png"
@@ -27,7 +27,7 @@ export default function Home() {
           width={0}
           height={0}
           sizes="100%"
-          className="mb-8 h-auto w-36"
+          className="h-auto w-36 sm:mb-8"
         />
       </header>
       <div className="fixed right-4 top-4">
@@ -37,13 +37,13 @@ export default function Home() {
         <Card className="bg-zinc-200 dark:bg-card">
           <CardHeader>
             <CardTitle>Cadastre-se</CardTitle>
-            <CardDescription>
+            <CardDescription className="text-xs sm:text-sm">
               Preencha os campos abaixo e junte-se a nós
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-5">
             <SignUpForm />
-            <div className="border-t-2" />
+            <div className="border-t border-zinc-300 dark:border-zinc-800" />
             <div className="text-center text-sm">
               Já tem uma conta?{" "}
               <Link href="/" className="text-emerald-500 hover:underline">
@@ -55,4 +55,5 @@ export default function Home() {
       </div>
     </div>
   );
-}
+};
+export default SignUpPage;
