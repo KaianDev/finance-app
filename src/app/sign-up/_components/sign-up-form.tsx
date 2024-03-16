@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -18,7 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-import { frontendApi } from "@/lib/api";
+import { signUp } from "@/data/auth";
 
 const signUpForm = z.object({
   email: z.string().email("Endereço de e-mail inválido"),
@@ -54,13 +55,14 @@ export const SignUpForm = () => {
     const { email, password } = data;
     setLoading(true);
     try {
-      await frontendApi.post("/sign-up", { email, password });
+      signUp({ email, password });
       router.replace("/");
-    } catch {
+    } catch (e) {
+      const axiosError = e as AxiosError;
       toast({
         variant: "destructive",
         title: "Erro",
-        description: "Ocorreu um erro"
+        description: axiosError.message
       });
     } finally {
       setLoading(false);

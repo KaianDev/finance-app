@@ -5,7 +5,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 interface IAuthContext {
   isAuthenticated: boolean;
-  signIn: (token: string) => void;
+  setTokenOnCookies: (token: string) => void;
   signOut: () => void;
 }
 
@@ -25,7 +25,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     }
   }, []);
 
-  const signIn = (token: string) => {
+  const setTokenOnCookies = (token: string) => {
     setCookie("finance-app.token", token, {
       maxAge: 60 * 60 * 3 // 3 hours
     });
@@ -38,7 +38,9 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, signIn, signOut }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, setTokenOnCookies, signOut }}
+    >
       {children}
     </AuthContext.Provider>
   );

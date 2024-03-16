@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -19,7 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "@/context/auth.context";
-import { frontendApi } from "@/lib/api";
+import { login } from "@/data/auth";
 
 const loginFormSchema = z.object({
   email: z.string().email("Endereço de e-mail inválido"),
@@ -30,7 +31,7 @@ type LoginSchemaType = z.infer<typeof loginFormSchema>;
 
 export const LoginForm = () => {
   const [loading, setLoading] = useState(false);
-  const { signIn } = useAuth();
+  const { setTokenOnCookies } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
 
@@ -45,17 +46,18 @@ export const LoginForm = () => {
   const onLoginSubmit = async (data: LoginSchemaType) => {
     try {
       setLoading(true);
-      const results = await frontendApi.post("auth/login", data);
-      const token = results.data as string;
+
+      const token = await login(data);
       if (token) {
-        signIn(token);
+        setTokenOnCookies(token);
         router.push("/dashboard");
       }
     } catch (e) {
+      const axiosError = e as AxiosError;
       toast({
         variant: "destructive",
         title: "Erro",
-        description: "E-mail e/ou senha inválidos"
+        description: axiosError.message
       });
     } finally {
       setLoading(false);

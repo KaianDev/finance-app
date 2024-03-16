@@ -1,3 +1,5 @@
+import { AxiosError } from "axios";
+
 import { frontendApi } from "@/lib/api";
 import { Activity } from "@/types/activity";
 import { ActivityFilter } from "@/types/activity-filter";
@@ -63,7 +65,12 @@ export const getPDF = async () => {
     const results = await frontendApi.get("activities/pdf");
     const pdf = results.data as string;
     return pdf;
-  } catch {
-    return false;
+  } catch (e) {
+    const axiosError = e as AxiosError;
+    const status = axiosError.response?.status;
+    if (status === 500) {
+      throw new AxiosError("Ocorreu um erro no servidor, tente mais tarde");
+    }
+    throw new AxiosError("Ocorreu um erro desconhecido.");
   }
 };
