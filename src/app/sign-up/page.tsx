@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 const SignUpPage = () => {
   return (
-    <div className="py-5 sm:pt-28">
+    <div className="py-5 sm:pt-10">
       <header className="flex items-center justify-center gap-2 py-5">
         <Image
           src="/assets/fnce.png"

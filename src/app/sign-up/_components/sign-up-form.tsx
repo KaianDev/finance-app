@@ -22,6 +22,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { signUp } from "@/data/auth";
 
 const signUpForm = z.object({
+  name: z.string({ required_error: "Campo obrigatório" }),
   email: z.string().email("Endereço de e-mail inválido"),
   password: z.string().min(4, "A senha deve conter no mínimo 4 caracteres"),
   passwordConfirm: z
@@ -39,6 +40,7 @@ export const SignUpForm = () => {
   const form = useForm<SignUpForm>({
     resolver: zodResolver(signUpForm),
     defaultValues: {
+      name: undefined,
       email: "",
       password: "",
       passwordConfirm: ""
@@ -52,10 +54,10 @@ export const SignUpForm = () => {
       });
       return;
     }
-    const { email, password } = data;
+    const { name, email, password } = data;
     setLoading(true);
     try {
-      signUp({ email, password });
+      signUp({ name, email, password });
       router.replace("/");
     } catch (e) {
       const axiosError = e as AxiosError;
@@ -72,6 +74,19 @@ export const SignUpForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSignUpSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Nome</FormLabel>
+              <FormControl className="bg-background">
+                <Input placeholder="Digite seu nome" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="email"

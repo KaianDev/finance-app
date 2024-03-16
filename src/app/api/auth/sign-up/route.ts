@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { backendApi } from "@/lib/api";
 
 interface IDataRequestBody {
+  name: string;
   email: string;
   password: string;
 }
