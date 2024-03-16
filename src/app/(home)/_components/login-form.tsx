@@ -1,4 +1,5 @@
 "use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -7,13 +8,6 @@ import { ScaleLoader } from "react-spinners";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -69,56 +63,43 @@ export const LoginForm = () => {
   };
 
   return (
-    <Card className="bg-zinc-200 dark:bg-card">
-      <CardHeader>
-        <CardTitle>Fazer Login</CardTitle>
-        <CardDescription>
-          Faça seu login e gerencie suas finanças
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onLoginSubmit)}
-            className="space-y-4"
-          >
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>E-mail</FormLabel>
-                  <FormControl className="bg-background">
-                    <Input placeholder="Digite seu e-mail" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onLoginSubmit)} className="space-y-5">
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>E-mail</FormLabel>
+              <FormControl className="bg-background">
+                <Input placeholder="Digite seu e-mail" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Senha</FormLabel>
-                  <FormControl className="bg-background">
-                    <Input
-                      type="password"
-                      placeholder="Digite sua senha"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button disabled={loading}>
-              {!loading ? "Entrar" : <ScaleLoader height={18} color="white" />}
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Senha</FormLabel>
+              <FormControl className="bg-background">
+                <Input
+                  type="password"
+                  placeholder="Digite sua senha"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button disabled={loading}>
+          {!loading ? "Entrar" : <ScaleLoader height={18} color="white" />}
+        </Button>
+      </form>
+    </Form>
   );
 };

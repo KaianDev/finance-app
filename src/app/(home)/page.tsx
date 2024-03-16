@@ -1,7 +1,20 @@
+import { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 
 import { LoginForm } from "@/app/(home)/_components/login-form";
 import { ModeToggle } from "@/components/mode-toggle";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card";
+
+export const metadata: Metadata = {
+  title: "Login | fnce"
+};
 
 export default function Home() {
   return (
@@ -20,7 +33,27 @@ export default function Home() {
         <ModeToggle />
       </div>
       <div className="mx-auto max-w-xl px-4 ">
-        <LoginForm />
+        <Card className="bg-zinc-200 dark:bg-card">
+          <CardHeader>
+            <CardTitle>Cadastre-se</CardTitle>
+            <CardDescription>
+              Preencha os campos abaixo e junte-se a nós
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-5">
+            <LoginForm />
+            <div className="border-t-2" />
+            <div className="text-center text-sm">
+              Ainda não tem uma conta?{" "}
+              <Link
+                href="/sign-up"
+                className="text-emerald-500 hover:underline"
+              >
+                Clique aqui
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
