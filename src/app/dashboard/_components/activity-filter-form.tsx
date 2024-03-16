@@ -33,7 +33,7 @@ const activityFilterSchema = z.object({
       to: z.date().optional()
     })
     .optional(),
-  typeValue: z.enum(["Receita", "Despesa"]).optional()
+  typeValue: z.enum(["expense", "revenue"]).optional()
 });
 
 type ActivityFilterSchema = z.infer<typeof activityFilterSchema>;
@@ -127,13 +127,13 @@ export const ActivityFilterForm = () => {
                   >
                     <FormItem className="flex items-center space-x-2 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value="Receita" />
+                        <RadioGroupItem value="revenue" />
                       </FormControl>
                       <FormLabel>Receitas</FormLabel>
                     </FormItem>
                     <FormItem className="flex items-center space-x-2 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value="Despesa" />
+                        <RadioGroupItem value="expense" />
                       </FormControl>
                       <FormLabel>Despesas</FormLabel>
                     </FormItem>
