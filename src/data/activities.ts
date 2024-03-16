@@ -27,7 +27,7 @@ export interface DataAddTypeRequest {
   description: string;
   value: number;
   type: "EXPENSE" | "REVENUE";
-  date: Date;
+  date: string;
 }
 
 export const addActivity = async (data: DataAddTypeRequest) => {

@@ -25,6 +25,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { SheetClose } from "@/components/ui/sheet";
 import { useFilterContext } from "@/context/filter.context";
+import { getDateConverter } from "@/helpers/getDateConverter";
 
 const activityFilterSchema = z.object({
   date: z
@@ -54,8 +55,8 @@ export const ActivityFilterForm = () => {
 
   const handleActivityFilterSubmit = (data: ActivityFilterSchema) => {
     setFilter({
-      oneDate: data.date?.from?.toISOString().split("T")[0],
-      secondDate: data.date?.to?.toISOString().split("T")[0],
+      oneDate: data.date?.from ? getDateConverter(data.date.from) : undefined,
+      secondDate: data.date?.to ? getDateConverter(data.date.to) : undefined,
       typeValue: data.typeValue
     });
     setEnabled(true);

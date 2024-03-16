@@ -22,6 +22,7 @@ import {
   SelectValue
 } from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
+import { getDateConverter } from "@/helpers/getDateConverter";
 import { useAddActivity } from "@/lib/mutation";
 import { cn } from "@/lib/utils";
 
@@ -90,6 +91,7 @@ export const ActivityForm = () => {
     await addActivity.mutateAsync(
       {
         ...data,
+        date: getDateConverter(data.date),
         type: data.type === "REVENUE" ? "REVENUE" : "EXPENSE",
         value: numValue
       },
