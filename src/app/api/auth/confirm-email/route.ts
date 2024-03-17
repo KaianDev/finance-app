@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { backendApi } from "@/lib/api";
 
-export const GET = async (request: NextRequest) => {
+export const POST = async (request: NextRequest) => {
   try {
     const data = await request.json();
     await backendApi.post("/auth/confirm", data);

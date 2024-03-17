@@ -50,7 +50,11 @@ export const ConfirmEmailForm = () => {
 
     try {
       if (userEmail) {
-        await confirmEmail({ email: userEmail, code: data.code });
+        const confirmData = {
+          code: data.code,
+          email: userEmail
+        };
+        await confirmEmail(confirmData);
         toast({
           title: "Sucesso",
           description: "Código confirmado com sucesso..."
