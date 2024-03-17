@@ -25,6 +25,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
+      <head>
+        <link
+          rel="icon"
+          href="/assets/favicon.png"
+          type="image/png"
+          sizes="any"
+        />
+      </head>
       <body
         className={cn(
           fontSans.variable,

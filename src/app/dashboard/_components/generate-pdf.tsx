@@ -7,9 +7,12 @@ import { ScaleLoader } from "react-spinners";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import { getPDF } from "@/data/activities";
+import { useActivity } from "@/lib/query";
 
 export const GeneratePDF = () => {
+  const { data, isLoading } = useActivity();
   const [loading, setLoading] = useState(false);
+
   const handleGeneratePDFClick = async () => {
     try {
       setLoading(true);
@@ -32,7 +35,7 @@ export const GeneratePDF = () => {
       setLoading(false);
     }
   };
-
+  if (data?.length === 0 || isLoading) return null;
   return (
     <Button disabled={loading} onClick={handleGeneratePDFClick}>
       {loading ? (

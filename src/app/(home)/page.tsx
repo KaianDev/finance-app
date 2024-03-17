@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/card";
 
 export const metadata: Metadata = {
-  title: "Login | fnce"
+  title: "Login | fnce."
 };
 
 const HomePage = () => {

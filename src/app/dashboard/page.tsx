@@ -6,7 +6,7 @@ import { ActivityForm } from "./_components/activity-form";
 import { GeneratePDF } from "./_components/generate-pdf";
 
 export const metadata: Metadata = {
-  title: "Dashboard | fnce"
+  title: "Dashboard | fnce."
 };
 
 const DashboardPage = () => {

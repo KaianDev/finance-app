@@ -14,7 +14,7 @@ import { ConfirmEmailForm } from "./_components/confirm-email-form";
 import { ReSendEmail } from "./_components/resend-email";
 
 export const metadata: Metadata = {
-  title: "Confirmar E-mail | fnce"
+  title: "Confirmar E-mail | fnce."
 };
 
 const ConfirmEmailPage = () => {

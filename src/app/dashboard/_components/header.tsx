@@ -25,7 +25,7 @@ export const Header = () => {
 
         <div className="flex items-center justify-center gap-4">
           {session && (
-            <p className="text-sm sm:text-base">
+            <p className="text-sm text-white sm:text-base">
               Olá, {session.name.split(" ")[0]}
             </p>
           )}

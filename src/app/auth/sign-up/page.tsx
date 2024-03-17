@@ -14,7 +14,7 @@ import {
 import { SignUpForm } from "./_components/sign-up-form";
 
 export const metadata: Metadata = {
-  title: "Cadastre-se | fnce"
+  title: "Cadastre-se | fnce."
 };
 
 const SignUpPage = () => {

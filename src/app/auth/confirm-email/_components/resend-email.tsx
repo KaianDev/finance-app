@@ -58,7 +58,8 @@ export const ReSendEmail = () => {
       const axiosError = e as AxiosError;
       toast({
         title: "Erro",
-        description: axiosError.message
+        description: axiosError.message,
+        variant: "destructive"
       });
     } finally {
       setLoading(false);
