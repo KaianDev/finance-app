@@ -3,8 +3,10 @@ import Link from "next/link";
 
 import { SignOutButton } from "@/components/sign-out-button";
 import { Card, CardContent } from "@/components/ui/card";
+import { getServerSession } from "@/helpers/getServerSession";
 
 export const Header = () => {
+  const session = getServerSession();
   return (
     <header>
       <Card className="flex items-center justify-between rounded-t-none border-0 bg-zinc-800 pr-5 dark:bg-card">
@@ -21,7 +23,14 @@ export const Header = () => {
           </Link>
         </CardContent>
 
-        <SignOutButton />
+        <div className="flex items-center justify-center gap-4">
+          {session && (
+            <p className="text-sm sm:text-base">
+              Olá, {session.name.split(" ")[0]}
+            </p>
+          )}
+          <SignOutButton />
+        </div>
       </Card>
     </header>
   );

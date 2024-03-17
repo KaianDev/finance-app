@@ -26,7 +26,7 @@ export const ActivityFilter = () => {
             <FilterIcon size={16} className="mr-2" /> Filtros
           </Button>
         </SheetTrigger>
-        <SheetContent side="left">
+        <SheetContent side="left" className="w-full">
           <SheetHeader>
             <SheetTitle>Filtros</SheetTitle>
             <Separator />

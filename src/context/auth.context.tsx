@@ -2,12 +2,9 @@
 
 import { AxiosError } from "axios";
 import { deleteCookie, setCookie } from "cookies-next";
-import { jwtDecode } from "jwt-decode";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext } from "react";
 
 import { frontendApi } from "@/lib/api";
-import { CustomJwtDecoded } from "@/types/custom-jwt-decoded";
-import { Session } from "@/types/session";
 
 interface SignInData {
   email: string;
@@ -21,8 +18,6 @@ interface SignUpData {
 }
 
 interface IAuthContext {
-  session: Session | null;
-  userEmail: string | null;
   signIn: (data: SignInData) => Promise<void>;
   signUp: (data: SignUpData) => Promise<void>;
   signOut: () => void;
@@ -36,22 +31,15 @@ interface AuthContextProviderProps {
   children: React.ReactNode;
 }
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
-  const [session, setSession] = useState<Session | null>(null);
-  const [userEmail, setUserEmail] = useState<string | null>(null);
-
   const signIn = async (data: SignInData) => {
     try {
       const results = await frontendApi.post("auth/login", data);
       const token = results.data as string;
 
       if (token) {
-        const decoded = jwtDecode<CustomJwtDecoded>(token);
-        const { name, sub } = decoded;
-        const user = { name, email: sub };
         setCookie("finance-app.token", token, {
           maxAge: 60 * 60 * 3 // 3 hours
         });
-        setSession(user);
       }
     } catch (e) {
       const axiosError = e as AxiosError;
@@ -65,13 +53,11 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
 
   const signOut = () => {
     deleteCookie("finance-app.token");
-    setSession(null);
   };
 
   const signUp = async (data: SignUpData) => {
     try {
       await frontendApi.post("/auth/sign-up", data);
-      setUserEmail(data.email);
     } catch (e) {
       const axiosError = e as AxiosError;
       const status = axiosError.response?.status;
@@ -111,8 +97,6 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   return (
     <AuthContext.Provider
       value={{
-        session,
-        userEmail,
         signIn,
         signOut,
         signUp,
