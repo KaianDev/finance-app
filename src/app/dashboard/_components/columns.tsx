@@ -18,7 +18,7 @@ export const columns: ColumnDef<Activity>[] = [
     },
     cell: ({ row, column }) => {
       const date = new Date(row.getValue("date"));
-      const formattedDate = date.toLocaleDateString();
+      const formattedDate = date.toLocaleDateString("pt-BR",{timezone:"UTC"});
 
       return (
         <div className={cn(column.id === "date" && "hidden sm:table-cell")}>
