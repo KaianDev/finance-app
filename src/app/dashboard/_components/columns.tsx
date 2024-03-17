@@ -1,5 +1,6 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
+import { intlFormat } from "date-fns";
 
 import { cn } from "@/lib/utils";
 import { Activity } from "@/types/activity";
@@ -17,13 +18,8 @@ export const columns: ColumnDef<Activity>[] = [
       );
     },
     cell: ({ row, column }) => {
-      const date = new Date(row.getValue("date") as string);
-      const formattedDate = date.toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-        timeZone: "UTC"
-      });
+      const date = row.getValue("date") as string;
+      const formattedDate = intlFormat(date, { timeZone: "UTC" });
 
       return (
         <div className={cn(column.id === "date" && "hidden sm:table-cell")}>

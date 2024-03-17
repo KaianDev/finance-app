@@ -35,7 +35,7 @@ type ConfirmEmailSchema = z.infer<typeof confirmEmailSchema>;
 
 export const ConfirmEmailForm = () => {
   const [loading, setLoading] = useState(false);
-  const { userEmail, confirmEmail } = useAuth();
+  const { confirmEmail } = useAuth();
   const router = useRouter();
 
   const form = useForm<ConfirmEmailSchema>({
@@ -49,18 +49,13 @@ export const ConfirmEmailForm = () => {
     setLoading(true);
 
     try {
-      if (userEmail) {
-        const confirmData = {
-          code: data.code,
-          email: userEmail
-        };
-        await confirmEmail(confirmData);
-        toast({
-          title: "Sucesso",
-          description: "Código confirmado com sucesso..."
-        });
-        router.replace("/");
-      }
+      const { code } = data;
+      await confirmEmail(code);
+      toast({
+        title: "Sucesso",
+        description: "Código confirmado com sucesso..."
+      });
+      router.replace("/");
     } catch (error) {
       const axiosError = error as AxiosError;
       toast({
@@ -87,7 +82,7 @@ export const ConfirmEmailForm = () => {
               <FormLabel>Insira seu código</FormLabel>
               <FormControl>
                 <InputOTP
-                  maxLength={4}
+                  maxLength={6}
                   render={({ slots }) => (
                     <InputOTPGroup>
                       {slots.map((slot, index) => (

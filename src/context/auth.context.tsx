@@ -20,18 +20,14 @@ interface SignUpData {
   password: string;
 }
 
-interface ConfirmEmailData {
-  email: string;
-  code: string;
-}
-
 interface IAuthContext {
   session: Session | null;
   userEmail: string | null;
   signIn: (data: SignInData) => Promise<void>;
   signUp: (data: SignUpData) => Promise<void>;
   signOut: () => void;
-  confirmEmail: (data: ConfirmEmailData) => Promise<void>;
+  confirmEmail: (code: string) => Promise<void>;
+  reSendEmail: (email: string) => Promise<void>;
 }
 
 const AuthContext = createContext({} as IAuthContext);
@@ -86,9 +82,22 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     }
   };
 
-  const confirmEmail = async (data: ConfirmEmailData) => {
+  const confirmEmail = async (code: string) => {
     try {
-      await frontendApi.post("/auth/confirm-email", data);
+      await frontendApi.post("/auth/confirm-email", { code });
+    } catch (e) {
+      const axiosError = e as AxiosError;
+      const status = axiosError.response?.status;
+      if (status === 500) {
+        throw new AxiosError("Ocorreu um erro no servidor, tente mais tarde");
+      }
+      throw new AxiosError("Ocorreu um erro desconhecido.");
+    }
+  };
+
+  const reSendEmail = async (email: string) => {
+    try {
+      await frontendApi.post("/auth/resend-email", { email });
     } catch (e) {
       const axiosError = e as AxiosError;
       const status = axiosError.response?.status;
@@ -101,7 +110,15 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
 
   return (
     <AuthContext.Provider
-      value={{ session, userEmail, signIn, signOut, signUp, confirmEmail }}
+      value={{
+        session,
+        userEmail,
+        signIn,
+        signOut,
+        signUp,
+        confirmEmail,
+        reSendEmail
+      }}
     >
       {children}
     </AuthContext.Provider>
