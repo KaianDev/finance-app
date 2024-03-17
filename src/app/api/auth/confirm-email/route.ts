@@ -6,6 +6,7 @@ export const POST = async (request: NextRequest) => {
   try {
     const data = await request.json();
     await backendApi.post("/auth/confirm", data);
+    return new NextResponse("Ok");
   } catch (e) {
     return new NextResponse(JSON.stringify({ message: "Ocorreu um erro" }), {
       status: 403
