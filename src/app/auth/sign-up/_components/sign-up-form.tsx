@@ -59,7 +59,7 @@ export const SignUpForm = () => {
     setLoading(true);
     try {
       await signUp({ name, email, password });
-      router.replace("/");
+      router.replace("/auth/confirm-email");
     } catch (e) {
       const axiosError = e as AxiosError;
       toast({

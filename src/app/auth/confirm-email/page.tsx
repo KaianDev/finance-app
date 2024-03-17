@@ -1,8 +1,6 @@
 import { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 
-import { LoginForm } from "@/app/(home)/_components/login-form";
 import { ModeToggle } from "@/components/mode-toggle";
 import {
   Card,
@@ -12,11 +10,14 @@ import {
   CardTitle
 } from "@/components/ui/card";
 
+import { ConfirmEmailForm } from "./_components/confirm-email-form";
+import { ReSendEmail } from "./_components/resend-email";
+
 export const metadata: Metadata = {
-  title: "Login | fnce"
+  title: "Confirmar E-mail | fnce"
 };
 
-const HomePage = () => {
+const ConfirmEmailPage = () => {
   return (
     <div className="py-5 sm:pt-10">
       <header className="flex items-center justify-center gap-2 py-5">
@@ -35,28 +36,25 @@ const HomePage = () => {
       <div className="mx-auto max-w-xl px-4 ">
         <Card className="bg-zinc-200 dark:bg-card">
           <CardHeader>
-            <CardTitle>Login</CardTitle>
-            <CardDescription className="text-xs sm:text-sm">
-              Preencha os campos abaixo e junte-se a nós
-            </CardDescription>
+            <CardTitle>Confirmação de Inscrição</CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
-            <LoginForm />
+            <CardDescription className="text-sm">
+              Por favor, insira o token que você recebeu em seu email para
+              confirmar sua inscrição:
+            </CardDescription>
+
+            <ConfirmEmailForm />
+
             <div className="border-t border-zinc-300 dark:border-zinc-800" />
-            <div className="text-center text-sm">
-              Ainda não tem uma conta?{" "}
-              <Link
-                href="/auth/sign-up"
-                className="text-emerald-500 hover:underline"
-              >
-                Clique aqui
-              </Link>
-            </div>
+            <CardDescription>
+              Se não recebeu o token clique em <ReSendEmail /> que estaremos
+              enviando um novo token.
+            </CardDescription>
           </CardContent>
         </Card>
       </div>
     </div>
   );
 };
-
-export default HomePage;
+export default ConfirmEmailPage;

@@ -20,11 +20,18 @@ interface SignUpData {
   password: string;
 }
 
+interface ConfirmEmailData {
+  email: string;
+  code: string;
+}
+
 interface IAuthContext {
   session: Session | null;
+  userEmail: string | null;
   signIn: (data: SignInData) => Promise<void>;
   signUp: (data: SignUpData) => Promise<void>;
   signOut: () => void;
+  confirmEmail: (data: ConfirmEmailData) => Promise<void>;
 }
 
 const AuthContext = createContext({} as IAuthContext);
@@ -34,15 +41,17 @@ interface AuthContextProviderProps {
 }
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const [session, setSession] = useState<Session | null>(null);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
 
   const signIn = async (data: SignInData) => {
     try {
       const results = await frontendApi.post("auth/login", data);
       const token = results.data as string;
+
       if (token) {
         const decoded = jwtDecode<CustomJwtDecoded>(token);
-        const { name } = decoded;
-        const user = { name };
+        const { name, sub } = decoded;
+        const user = { name, email: sub };
         setCookie("finance-app.token", token, {
           maxAge: 60 * 60 * 3 // 3 hours
         });
@@ -66,6 +75,20 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const signUp = async (data: SignUpData) => {
     try {
       await frontendApi.post("/auth/sign-up", data);
+      setUserEmail(data.email);
+    } catch (e) {
+      const axiosError = e as AxiosError;
+      const status = axiosError.response?.status;
+      if (status === 500) {
+        throw new AxiosError("Ocorreu um erro no servidor, tente mais tarde");
+      }
+      throw new AxiosError("Ocorreu um erro desconhecido.");
+    }
+  };
+
+  const confirmEmail = async (data: ConfirmEmailData) => {
+    try {
+      await frontendApi.post("/auth/confirm-email", data);
     } catch (e) {
       const axiosError = e as AxiosError;
       const status = axiosError.response?.status;
@@ -77,7 +100,9 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   };
 
   return (
-    <AuthContext.Provider value={{ session, signIn, signOut, signUp }}>
+    <AuthContext.Provider
+      value={{ session, userEmail, signIn, signOut, signUp, confirmEmail }}
+    >
       {children}
     </AuthContext.Provider>
   );
