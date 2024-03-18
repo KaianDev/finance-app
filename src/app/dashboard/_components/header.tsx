@@ -10,7 +10,7 @@ export const Header = () => {
   return (
     <header>
       <Card className="rounded-t-none border-0 bg-zinc-800 pr-5 dark:bg-card">
-        <div className="container flex items-center justify-between">
+        <div className="flex items-center justify-between sm:container">
           <CardContent className="py-3 md:p-6 md:pt-6">
             <Link href="/dashboard">
               <Image

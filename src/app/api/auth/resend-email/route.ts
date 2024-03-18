@@ -4,12 +4,16 @@ import { backendApi } from "@/lib/api";
 
 export const POST = async (request: NextRequest) => {
   try {
-    const data = await request.json();
-    await backendApi.post("/auth/resend", data);
-    return new NextResponse("Ok");
+    const token = request.cookies.get("finance-app.create")?.value;
+    await backendApi.post("/auth/resend", null, {
+      headers: {
+        activationToken: token
+      }
+    });
+    return new NextResponse(JSON.stringify({ message: "E-mail enviado" }));
   } catch (error) {
     return new NextResponse(JSON.stringify({ message: "Ocorreu um erro" }), {
-      status: 403
+      status: 500
     });
   }
 };

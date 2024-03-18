@@ -22,7 +22,7 @@ interface IAuthContext {
   signUp: (data: SignUpData) => Promise<void>;
   signOut: () => void;
   confirmEmail: (code: string) => Promise<void>;
-  reSendEmail: (email: string) => Promise<void>;
+  reSendEmail: () => Promise<void>;
 }
 
 const AuthContext = createContext({} as IAuthContext);
@@ -57,7 +57,13 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
 
   const signUp = async (data: SignUpData) => {
     try {
-      await frontendApi.post("/auth/sign-up", data);
+      const results = await frontendApi.post("/auth/sign-up", data);
+      const token = results.data.token as string;
+      if (token) {
+        setCookie("finance-app.create", token, {
+          maxAge: 60 * 10 // 10 minutes
+        });
+      }
     } catch (e) {
       const axiosError = e as AxiosError;
       const status = axiosError.response?.status;
@@ -71,6 +77,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const confirmEmail = async (code: string) => {
     try {
       await frontendApi.post("/auth/confirm-email", { code });
+      deleteCookie("finance-app.create");
     } catch (e) {
       const axiosError = e as AxiosError;
       const status = axiosError.response?.status;
@@ -81,9 +88,9 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     }
   };
 
-  const reSendEmail = async (email: string) => {
+  const reSendEmail = async () => {
     try {
-      await frontendApi.post("/auth/resend-email", { email });
+      await frontendApi.post("/auth/resend-email");
     } catch (e) {
       const axiosError = e as AxiosError;
       const status = axiosError.response?.status;

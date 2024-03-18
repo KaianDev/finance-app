@@ -11,8 +11,9 @@ interface IDataRequestBody {
 export const POST = async (request: NextRequest) => {
   try {
     const userData = (await request.json()) as IDataRequestBody;
-    await backendApi.post("auth/create", userData);
-    return new NextResponse(JSON.stringify({ message: "Usuário criado" }), {
+    const results = await backendApi.post("auth/create", userData);
+    const token = results.data.activationToken as string;
+    return new NextResponse(JSON.stringify({ token }), {
       status: 201
     });
   } catch (error) {
