@@ -9,27 +9,28 @@ export const Header = () => {
   const session = getServerSession();
   return (
     <header>
-      <Card className="flex items-center justify-between rounded-t-none border-0 bg-zinc-800 pr-5 dark:bg-card">
-        <CardContent className="py-3 md:p-6 md:pt-6">
-          <Link href="/dashboard">
-            <Image
-              src="/assets/fnce.png"
-              alt="Logo fnce."
-              width={0}
-              height={0}
-              sizes="100%"
-              className="aspect-auto h-auto w-16 p-0 sm:w-20 md:w-28"
-            />
-          </Link>
-        </CardContent>
-
-        <div className="flex items-center justify-center gap-4">
-          {session && (
-            <p className="text-sm text-white sm:text-base">
-              Olá, {session.name.split(" ")[0]}
-            </p>
-          )}
-          <SignOutButton />
+      <Card className="rounded-t-none border-0 bg-zinc-800 pr-5 dark:bg-card">
+        <div className="container flex items-center justify-between">
+          <CardContent className="py-3 md:p-6 md:pt-6">
+            <Link href="/dashboard">
+              <Image
+                src="/assets/fnce.png"
+                alt="Logo fnce."
+                width={0}
+                height={0}
+                sizes="100%"
+                className="aspect-auto h-auto w-16 p-0 sm:w-20 md:w-28"
+              />
+            </Link>
+          </CardContent>
+          <div className="flex items-center justify-center gap-4">
+            {session && (
+              <p className="text-sm capitalize text-white sm:text-base">
+                Olá, {session.name.split(" ")[0]}
+              </p>
+            )}
+            <SignOutButton />
+          </div>
         </div>
       </Card>
     </header>

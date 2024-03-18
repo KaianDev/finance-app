@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
+import { ptBR } from "date-fns/locale/pt-BR";
 import { CalendarIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import { useForm } from "react-hook-form";
@@ -90,11 +91,18 @@ export const ActivityFilterForm = () => {
                         {field.value?.from ? (
                           field.value.to ? (
                             <>
-                              {format(field.value.from, "LLL dd, y")} -{" "}
-                              {format(field.value.to, "LLL dd, y")}
+                              {format(field.value.from, "LLL dd, y", {
+                                locale: ptBR
+                              })}{" "}
+                              -{" "}
+                              {format(field.value.to, "LLL dd, y", {
+                                locale: ptBR
+                              })}
                             </>
                           ) : (
-                            format(field.value.from, "LLL dd, y")
+                            format(field.value.from, "LLL dd, y", {
+                              locale: ptBR
+                            })
                           )
                         ) : (
                           <span>Selecione uma ou duas data(s)</span>
@@ -105,6 +113,7 @@ export const ActivityFilterForm = () => {
                       <Calendar
                         mode="range"
                         defaultMonth={field.value?.from}
+                        locale={ptBR}
                         selected={field.value as DateRange | undefined}
                         onSelect={field.onChange}
                       />

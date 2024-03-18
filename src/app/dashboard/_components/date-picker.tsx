@@ -2,6 +2,7 @@
 
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
+import { ptBR } from "date-fns/locale/pt-BR";
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
@@ -30,7 +31,11 @@ export const DatePicker = ({ date, setDate }: DatePickerProps) => {
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "PPP") : <span>Pick a date</span>}
+          {date ? (
+            format(date, "PPP", { locale: ptBR })
+          ) : (
+            <span>Pick a date</span>
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">

@@ -2,6 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { withMask } from "use-mask-input";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -66,7 +67,9 @@ export const ActivityForm = () => {
     form.formState.errors.value;
 
   const handleInsertActivitySubmit = async (data: ActivityFormSchemaType) => {
-    const numValue = parseFloat(data.value);
+    const numValue = Number.parseFloat(
+      data.value.replaceAll(".", "").replace(",", ".")
+    );
     if (isNaN(numValue)) {
       form.setError("value", {
         type: "manual",
@@ -88,6 +91,7 @@ export const ActivityForm = () => {
       });
       return;
     }
+
     await addActivity.mutateAsync(
       {
         ...data,
@@ -123,7 +127,7 @@ export const ActivityForm = () => {
       <Form {...form}>
         <form
           className={cn(
-            "flex flex-col gap-5 md:flex-row",
+            "flex flex-col gap-5 space-y-5 sm:space-y-0 md:flex-row",
             hasError ? "md:items-start" : "md:items-end"
           )}
           method="post"
@@ -162,9 +166,17 @@ export const ActivityForm = () => {
                 <FormLabel>Valor</FormLabel>
                 <FormControl className="bg-background">
                   <Input
-                    placeholder="Digite o valor"
-                    type="number"
                     {...field}
+                    ref={withMask([
+                      "9,99",
+                      "99,99",
+                      "999,99",
+                      "9.999,99",
+                      "99.999,99",
+                      "999.999,99"
+                    ])}
+                    placeholder="Digite o valor"
+                    type="text"
                   />
                 </FormControl>
                 <FormMessage />
@@ -197,7 +209,7 @@ export const ActivityForm = () => {
             )}
           />
           <div className={cn(hasError ? "md:self-center" : "md:self-end")}>
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="mt-12 w-full sm:mt-0">
               <Plus className="mr-2" />
               Adicionar
             </Button>
