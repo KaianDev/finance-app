@@ -43,6 +43,7 @@ export const DatePicker = ({ date, setDate }: DatePickerProps) => {
           mode="single"
           selected={date}
           onSelect={day => setDate(day !== undefined ? day : new Date())}
+          locale={ptBR}
           initialFocus
         />
       </PopoverContent>
