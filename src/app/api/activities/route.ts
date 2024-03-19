@@ -10,12 +10,19 @@ interface IBackendResponseGET {
 
 export const GET = async (request: NextRequest) => {
   const authToken = getToken(request);
+  const url = request.nextUrl.searchParams;
+
+  const paginationParams = {
+    size: url.get("size"),
+    page: url.get("page")
+  };
 
   try {
     const results = await backendApi.get("/activity/getAll", {
       headers: {
         Authorization: `Bearer ${authToken}`
-      }
+      },
+      params: paginationParams
     });
     const activities = results.data as IBackendResponseGET;
     return new NextResponse(JSON.stringify(activities), { status: 200 });

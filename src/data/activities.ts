@@ -1,12 +1,17 @@
 import { AxiosError } from "axios";
 
 import { frontendApi } from "@/lib/api";
-import { Activity } from "@/types/activity";
-import { ActivityFilter } from "@/types/activity-filter";
+import type { Activity } from "@/types/activity";
+import type { ActivityFilter } from "@/types/activity-filter";
+import type { Pagination } from "@/types/pagination";
 
-export const getActivities = async (): Promise<Activity[]> => {
+export const getActivities = async (
+  params: Pagination
+): Promise<Activity[]> => {
   try {
-    const results = await frontendApi.get("/activities");
+    const results = await frontendApi.get("/activities", {
+      params
+    });
     const activities = results.data as Activity[];
     return activities;
   } catch (error) {

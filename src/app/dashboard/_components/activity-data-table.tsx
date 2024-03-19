@@ -1,6 +1,6 @@
 "use client";
 
-import { useFilterContext } from "@/context/filter.context";
+import { useActivityContext } from "@/context/activity.context";
 import { useActivity, useFilteredActivity } from "@/lib/query";
 
 import { ActivityFilter } from "./activity-filter";
@@ -9,8 +9,9 @@ import { DataTable } from "./data-table";
 import { SkeletonTable } from "./skeleton-table";
 
 export const ActivityDataTable = () => {
-  const { data } = useActivity();
-  const { filter, enabled } = useFilterContext();
+  const { filter, enabled, pageSize, pageIndex } = useActivityContext();
+
+  const { data } = useActivity({ size: pageSize, page: pageIndex });
   const { data: filtered } = useFilteredActivity(filter, enabled);
 
   if (enabled && filtered) {

@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { SheetClose } from "@/components/ui/sheet";
-import { useFilterContext } from "@/context/filter.context";
+import { useActivityContext } from "@/context/activity.context";
 import { getDateConverter } from "@/helpers/getDateConverter";
 
 const activityFilterSchema = z.object({
@@ -41,7 +41,7 @@ const activityFilterSchema = z.object({
 type ActivityFilterSchema = z.infer<typeof activityFilterSchema>;
 
 export const ActivityFilterForm = () => {
-  const { setEnabled, setFilter } = useFilterContext();
+  const { setEnabled, setFilter } = useActivityContext();
 
   const form = useForm<ActivityFilterSchema>({
     resolver: zodResolver(activityFilterSchema),

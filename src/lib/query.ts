@@ -5,12 +5,13 @@ import {
   getActivitiesFiltered,
   getActivityBalance
 } from "@/data/activities";
-import { ActivityFilter } from "@/types/activity-filter";
+import type { ActivityFilter } from "@/types/activity-filter";
+import type { Pagination } from "@/types/pagination";
 
-export const useActivity = () =>
+export const useActivity = (data: Pagination) =>
   useQuery({
-    queryKey: ["activities"],
-    queryFn: getActivities
+    queryKey: ["activities", data],
+    queryFn: () => getActivities(data)
   });
 
 export const useActivityBalance = () =>

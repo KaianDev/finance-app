@@ -4,9 +4,12 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  getPaginationRowModel,
   useReactTable
 } from "@tanstack/react-table";
+import { ChevronsLeft, ChevronsRight } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -15,6 +18,8 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table";
+import { useActivityContext } from "@/context/activity.context";
+import { formatDecimal } from "@/helpers/formatDecimal";
 
 interface ActivityTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -25,11 +30,24 @@ export function DataTable<TData, TValue>({
   columns,
   data
 }: ActivityTableProps<TData, TValue>) {
+  const { pageIndex, pageSize, nextPage, previousPage, enabled } =
+    useActivityContext();
+
   const table = useReactTable({
     data,
     columns,
-    getCoreRowModel: getCoreRowModel()
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    manualPagination: true
   });
+
+  const getCanPreviousPage = () => {
+    return pageIndex === 0;
+  };
+
+  const getCanNextPage = () => {
+    return table.getRowModel().rows.length < pageSize;
+  };
 
   return (
     <div className="py-5">
@@ -71,12 +89,35 @@ export function DataTable<TData, TValue>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results
+                Sem resultados
               </TableCell>
             </TableRow>
           )}
         </TableBody>
       </Table>
+      {!enabled && (
+        <div className="mt-4 flex items-center justify-center gap-1">
+          <Button
+            variant="outline"
+            onClick={previousPage}
+            disabled={getCanPreviousPage()}
+          >
+            <ChevronsLeft size={18} />
+            <div className="hidden sm:block">Anterior</div>
+          </Button>
+          <div className="flex size-9 items-center justify-center rounded-md bg-white tracking-widest dark:bg-black">
+            {formatDecimal(pageIndex + 1)}
+          </div>
+          <Button
+            variant="outline"
+            onClick={nextPage}
+            disabled={getCanNextPage()}
+          >
+            <div className="hidden sm:block">Próximo</div>
+            <ChevronsRight size={18} />
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
