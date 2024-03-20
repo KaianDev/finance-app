@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -9,6 +10,7 @@ import {
   useReactTable
 } from "@tanstack/react-table";
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
+import { useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,7 +22,6 @@ import {
   TableRow
 } from "@/components/ui/table";
 import { useActivityContext } from "@/context/activity.context";
-import { formatDecimal } from "@/helpers/formatDecimal";
 import { useActivity } from "@/lib/query";
 
 interface ActivityTableProps<TData, TValue> {
@@ -48,10 +49,16 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     manualPagination: true,
-    onPaginationChange: setPagination,
     pageCount: getCount(),
+    onPaginationChange: setPagination,
     state: { pagination }
   });
+
+  useEffect(() => {
+    if (pagination.pageIndex > table.getPageCount() - 1) {
+      table.setPageIndex(prev => (prev > 0 ? prev - 1 : 0));
+    }
+  }, [activities]);
 
   return (
     <div className="py-5">
@@ -109,8 +116,9 @@ export function DataTable<TData, TValue>({
             <ChevronsLeft size={18} />
             <div className="hidden sm:block">Anterior</div>
           </Button>
-          <div className="flex size-9 items-center justify-center rounded-md bg-white tracking-widest dark:bg-black">
-            {formatDecimal(pagination.pageIndex + 1)}
+          <div className="flex h-9 items-center justify-center rounded-md bg-white px-2 tracking-widest dark:bg-black">
+            {pagination.pageIndex + 1} de{" "}
+            {table.getPageCount() === 0 ? 1 : table.getPageCount()}
           </div>
           <Button
             variant="outline"

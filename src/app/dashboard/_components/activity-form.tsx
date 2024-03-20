@@ -167,16 +167,23 @@ export const ActivityForm = () => {
                 <FormControl className="bg-background">
                   <Input
                     {...field}
-                    ref={withMask([
-                      "9,99",
-                      "99,99",
-                      "999,99",
-                      "9.999,99",
-                      "99.999,99",
-                      "999.999,99"
-                    ])}
                     placeholder="Digite o valor"
                     type="text"
+                    className=""
+                    ref={withMask(
+                      [
+                        "9,99",
+                        "99,99",
+                        "999,99",
+                        "9.999,99",
+                        "99.999,99",
+                        "999.999,99"
+                      ],
+                      {
+                        placeholder: "",
+                        showMaskOnHover: false
+                      }
+                    )}
                   />
                 </FormControl>
                 <FormMessage />
