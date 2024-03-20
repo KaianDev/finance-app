@@ -8,10 +8,10 @@ import {
 import type { ActivityFilter } from "@/types/activity-filter";
 import type { Pagination } from "@/types/pagination";
 
-export const useActivity = (data: Pagination) =>
+export const useActivity = (params?: Pagination) =>
   useQuery({
-    queryKey: ["activities", data],
-    queryFn: () => getActivities(data)
+    queryKey: ["activities", params],
+    queryFn: () => getActivities(params)
   });
 
 export const useActivityBalance = () =>

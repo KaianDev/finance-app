@@ -10,7 +10,7 @@ import { getPDF } from "@/data/activities";
 import { useActivity } from "@/lib/query";
 
 export const GeneratePDF = () => {
-  const { data, isLoading } = useActivity({});
+  const { data, isLoading } = useActivity();
   const [loading, setLoading] = useState(false);
 
   const handleGeneratePDFClick = async () => {

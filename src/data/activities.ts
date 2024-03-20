@@ -6,7 +6,7 @@ import type { ActivityFilter } from "@/types/activity-filter";
 import type { Pagination } from "@/types/pagination";
 
 export const getActivities = async (
-  params: Pagination
+  params?: Pagination
 ): Promise<Activity[]> => {
   try {
     const results = await frontendApi.get("/activities", {

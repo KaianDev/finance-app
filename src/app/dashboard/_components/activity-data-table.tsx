@@ -9,9 +9,9 @@ import { DataTable } from "./data-table";
 import { SkeletonTable } from "./skeleton-table";
 
 export const ActivityDataTable = () => {
-  const { filter, enabled, pageSize, pageIndex } = useActivityContext();
+  const { filter, enabled, pagination } = useActivityContext();
 
-  const { data } = useActivity({ size: pageSize, page: pageIndex });
+  const { data } = useActivity(pagination);
   const { data: filtered } = useFilteredActivity(filter, enabled);
 
   if (enabled && filtered) {

@@ -13,8 +13,8 @@ export const GET = async (request: NextRequest) => {
   const url = request.nextUrl.searchParams;
 
   const paginationParams = {
-    size: url.get("size"),
-    page: url.get("page")
+    size: url.get("pageSize"),
+    page: url.get("pageIndex")
   };
 
   try {

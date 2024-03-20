@@ -1,19 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useState
+} from "react";
 
 import { ActivityFilter } from "@/types/activity-filter";
+import { Pagination } from "@/types/pagination";
 
 interface IActivityContext {
   filter: ActivityFilter;
   enabled: boolean;
-  pageSize: number;
-  pageIndex: number;
+  pagination: Pagination;
   setFilter: (filter: ActivityFilter) => void;
   setEnabled: (v: boolean) => void;
-  nextPage: () => void;
-  previousPage: () => void;
+  setPagination: Dispatch<SetStateAction<Pagination>>;
 }
 
 const ActivityContext = createContext({} as IActivityContext);
@@ -25,29 +30,21 @@ export const ActivityContextProvider = ({
   children
 }: ActivityContextProviderProps) => {
   const [enabled, setEnabled] = useState(false);
-  const [pageIndex, setPageIndex] = useState(0);
   const [filter, setFilter] = useState<ActivityFilter>({});
-  const pageSize = 5;
-
-  const nextPage = () => {
-    setPageIndex(prev => prev + 1);
-  };
-
-  const previousPage = () => {
-    setPageIndex(prev => (prev > 0 ? prev - 1 : 0));
-  };
+  const [pagination, setPagination] = useState<Pagination>({
+    pageSize: 5,
+    pageIndex: 0
+  });
 
   return (
     <ActivityContext.Provider
       value={{
         filter,
-        pageSize,
-        pageIndex,
         enabled,
+        pagination,
         setFilter,
         setEnabled,
-        nextPage,
-        previousPage
+        setPagination
       }}
     >
       {children}

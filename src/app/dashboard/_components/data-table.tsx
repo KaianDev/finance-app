@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import {
@@ -20,6 +21,7 @@ import {
 } from "@/components/ui/table";
 import { useActivityContext } from "@/context/activity.context";
 import { formatDecimal } from "@/helpers/formatDecimal";
+import { useActivity } from "@/lib/query";
 
 interface ActivityTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -30,24 +32,26 @@ export function DataTable<TData, TValue>({
   columns,
   data
 }: ActivityTableProps<TData, TValue>) {
-  const { pageIndex, pageSize, nextPage, previousPage, enabled } =
-    useActivityContext();
+  const { data: activities } = useActivity();
+  const { enabled, pagination, setPagination } = useActivityContext();
+
+  const getCount = () => {
+    if (activities) {
+      return Math.ceil(activities.length / pagination.pageSize);
+    }
+    return -1;
+  };
 
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    manualPagination: true
+    manualPagination: true,
+    onPaginationChange: setPagination,
+    pageCount: getCount(),
+    state: { pagination }
   });
-
-  const getCanPreviousPage = () => {
-    return pageIndex === 0;
-  };
-
-  const getCanNextPage = () => {
-    return table.getRowModel().rows.length < pageSize;
-  };
 
   return (
     <div className="py-5">
@@ -99,19 +103,19 @@ export function DataTable<TData, TValue>({
         <div className="mt-4 flex items-center justify-center gap-1">
           <Button
             variant="outline"
-            onClick={previousPage}
-            disabled={getCanPreviousPage()}
+            disabled={!table.getCanPreviousPage()}
+            onClick={table.previousPage}
           >
             <ChevronsLeft size={18} />
             <div className="hidden sm:block">Anterior</div>
           </Button>
           <div className="flex size-9 items-center justify-center rounded-md bg-white tracking-widest dark:bg-black">
-            {formatDecimal(pageIndex + 1)}
+            {formatDecimal(pagination.pageIndex + 1)}
           </div>
           <Button
             variant="outline"
-            onClick={nextPage}
-            disabled={getCanNextPage()}
+            onClick={table.nextPage}
+            disabled={!table.getCanNextPage()}
           >
             <div className="hidden sm:block">Próximo</div>
             <ChevronsRight size={18} />
