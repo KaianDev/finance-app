@@ -17,12 +17,20 @@ interface SignUpData {
   password: string;
 }
 
+interface ForgotPasswordData {
+  id: number;
+  code: string;
+  password: string;
+}
+
 interface IAuthContext {
   signIn: (data: SignInData) => Promise<void>;
   signUp: (data: SignUpData) => Promise<void>;
   signOut: () => void;
   confirmEmail: (code: string) => Promise<void>;
   reSendEmail: () => Promise<void>;
+  forgotSendEmail: (email: string) => Promise<void>;
+  forgotPassword: (data: ForgotPasswordData) => Promise<void>;
 }
 
 const AuthContext = createContext({} as IAuthContext);
@@ -101,6 +109,32 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     }
   };
 
+  const forgotSendEmail = async (email: string) => {
+    try {
+      await frontendApi.post("/auth/forgot/send-email", { email });
+    } catch (e) {
+      const axiosError = e as AxiosError;
+      const status = axiosError.response?.status;
+      if (status === 500) {
+        throw new AxiosError("Ocorreu um erro no servidor, tente mais tarde");
+      }
+      throw new AxiosError("Ocorreu um erro desconhecido.");
+    }
+  };
+
+  const forgotPassword = async (data: ForgotPasswordData) => {
+    try {
+      await frontendApi.post("/auth/forgot", data);
+    } catch (e) {
+      const axiosError = e as AxiosError;
+      const status = axiosError.response?.status;
+      if (status === 500) {
+        throw new AxiosError("Ocorreu um erro no servidor, tente mais tarde");
+      }
+      throw new AxiosError("Ocorreu um erro desconhecido.");
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -108,7 +142,9 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
         signOut,
         signUp,
         confirmEmail,
-        reSendEmail
+        reSendEmail,
+        forgotSendEmail,
+        forgotPassword
       }}
     >
       {children}

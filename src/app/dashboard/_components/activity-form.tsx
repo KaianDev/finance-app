@@ -35,7 +35,8 @@ const activityFormSchema = z.object({
     .string({
       required_error: "O campo é obrigatório"
     })
-    .min(2, "Campo obrigatório"),
+    .min(2, "Campo obrigatório")
+    .max(20, "Número máximo de caracteres é 20"),
   value: z.coerce
     .string({
       required_error: "O campo é obrigatório",
@@ -127,8 +128,8 @@ export const ActivityForm = () => {
       <Form {...form}>
         <form
           className={cn(
-            "flex flex-col gap-5 space-y-5 sm:space-y-0 md:flex-row",
-            hasError ? "md:items-start" : "md:items-end"
+            "flex flex-col gap-5 space-y-5 sm:space-y-0 lg:flex-row",
+            hasError ? "lg:items-start" : "lg:items-end"
           )}
           method="post"
           onSubmit={form.handleSubmit(handleInsertActivitySubmit)}
@@ -137,7 +138,7 @@ export const ActivityForm = () => {
             control={form.control}
             name="date"
             render={({ field }) => (
-              <FormItem className="w-full md:w-max">
+              <FormItem className="w-full lg:w-max">
                 <FormLabel>Data</FormLabel>
                 <DatePicker setDate={field.onChange} date={field.value} />
                 <FormMessage />
@@ -162,7 +163,7 @@ export const ActivityForm = () => {
             control={form.control}
             name="value"
             render={({ field }) => (
-              <FormItem className="w-full md:w-[350px]">
+              <FormItem className="w-full lg:w-[350px]">
                 <FormLabel>Valor</FormLabel>
                 <FormControl className="bg-background">
                   <Input
@@ -195,7 +196,7 @@ export const ActivityForm = () => {
             control={form.control}
             name="type"
             render={({ field }) => (
-              <FormItem className="w-full md:w-[450px]">
+              <FormItem className="w-full lg:w-[450px]">
                 <FormLabel>Tipo</FormLabel>
                 <Select
                   onValueChange={field.onChange}
@@ -215,7 +216,7 @@ export const ActivityForm = () => {
               </FormItem>
             )}
           />
-          <div className={cn(hasError ? "md:self-center" : "md:self-end")}>
+          <div className={cn(hasError ? "lg:self-center" : "lg:self-end")}>
             <Button type="submit" className="mt-12 w-full sm:mt-0">
               <Plus className="mr-2" />
               Adicionar

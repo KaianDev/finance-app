@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AxiosError } from "axios";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -19,35 +18,52 @@ import {
   FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "@/components/ui/use-toast";
 import { useAuth } from "@/context/auth.context";
 
-const loginFormSchema = z.object({
-  email: z.string().email("Endereço de e-mail inválido"),
-  password: z.string().min(4, "A senha deve conter no mínimo 4 caracteres")
+const forgotPasswordForm = z.object({
+  password: z.string().min(4, "A senha deve conter no mínimo 4 caracteres"),
+  passwordConfirm: z
+    .string()
+    .min(4, "A senha deve conter no mínimo 4 caracteres")
 });
 
-type LoginSchemaType = z.infer<typeof loginFormSchema>;
+type ForgotPasswordForm = z.infer<typeof forgotPasswordForm>;
 
-export const LoginForm = () => {
+interface ForgotFormProps {
+  id: string;
+  code: string;
+}
+
+export const ForgotForm = ({ id, code }: ForgotFormProps) => {
   const [loading, setLoading] = useState(false);
-  const { signIn } = useAuth();
+  const { forgotPassword } = useAuth();
   const router = useRouter();
-  const { toast } = useToast();
 
-  const form = useForm<LoginSchemaType>({
-    resolver: zodResolver(loginFormSchema),
+  const form = useForm<ForgotPasswordForm>({
+    resolver: zodResolver(forgotPasswordForm),
     defaultValues: {
-      email: "",
-      password: ""
+      password: "",
+      passwordConfirm: ""
     }
   });
 
-  const onLoginSubmit = async (data: LoginSchemaType) => {
+  const onForgotPasswordSubmit = async (data: ForgotPasswordForm) => {
+    if (data.password !== data.passwordConfirm) {
+      form.setError("passwordConfirm", {
+        message: "As senhas não conferem"
+      });
+      return;
+    }
+
     try {
       setLoading(true);
-      await signIn(data);
-      router.push("/dashboard");
+      await forgotPassword({ code, id: parseInt(id), password: data.password });
+      toast({
+        title: "Sucesso",
+        description: "Senha redefinida com sucesso"
+      });
+      router.replace("/");
     } catch (e) {
       const axiosError = e as AxiosError;
       toast({
@@ -62,21 +78,10 @@ export const LoginForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onLoginSubmit)} className="space-y-5">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>E-mail</FormLabel>
-              <FormControl className="bg-background">
-                <Input placeholder="Digite seu e-mail" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
+      <form
+        onSubmit={form.handleSubmit(onForgotPasswordSubmit)}
+        className="space-y-4"
+      >
         <FormField
           control={form.control}
           name="password"
@@ -91,17 +96,28 @@ export const LoginForm = () => {
                 />
               </FormControl>
               <FormMessage />
-              <Link
-                href="/auth/forgot/send-email"
-                className="mt-4 block text-sm text-emerald-500 hover:underline"
-              >
-                Esqueceu a senha?
-              </Link>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="passwordConfirm"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Confirmar Senha</FormLabel>
+              <FormControl className="bg-background">
+                <Input
+                  type="password"
+                  placeholder="Confirme sua senha"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
         <Button disabled={loading}>
-          {!loading ? "Entrar" : <ScaleLoader height={18} color="white" />}
+          {!loading ? "Redefinir" : <ScaleLoader height={18} color="white" />}
         </Button>
       </form>
     </Form>
